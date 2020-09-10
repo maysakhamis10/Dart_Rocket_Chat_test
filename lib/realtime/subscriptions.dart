@@ -48,8 +48,8 @@ abstract class _ClientSubscriptionsMixin implements _DdpClientWrapper {
       controller.add(UpdateEvent()
         ..collection = collection
         ..operation = operation
-        ..id = id
-        ..doc = doc);
+    /*    ..id = id
+        ..doc = doc*/);
     });
     return controller.stream;
   }

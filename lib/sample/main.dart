@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ddp/ddp.dart';
 import 'package:flutter/material.dart';
 import 'package:jitsi/models/models.dart';
@@ -7,7 +9,19 @@ import 'package:jitsi/sample/chatRoom.dart';
 
 import 'my_channels.dart';
 
-void main() => runApp(MyApp());
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
+
+void main() {
+  HttpOverrides.global = new MyHttpOverrides();
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -21,17 +35,23 @@ class _MyAppState extends State<MyApp> {
         host: "rocketdev.itgsolutions.com",
       ),
       false);
+
   UserCredentials userCredentials = new UserCredentials(
-      id: " L5DTPyoPX7HMHJdTT",
-      token: "I_ETZM5UfWS6AFc0YaWZJBYVn1tbRyeIUJKI3C0KWkU");
+      id: "b5xdRX58zNb2DmqzA",
+      token: "nTNC-NpoY2KChS184hQWPjtdvW_J6AzmsafJBJGBRGk");
+
   ClientReal client2 = new ClientReal(
-      "patient3104",
-      Uri(scheme: "https", host: "rocketdev.itgsolutions.com", port: 443),
+      "pa0707",
+      Uri(scheme: "https", host: "rocketdev.itgsolutions.com", port: 3000),
       false);
-  Future<List<ChannelSubscription>> list;
+
+  List<ChannelSubscription> list = new List();
+
   @override
   void initState() {
     super.initState();
+    client.setCredentials(userCredentials);
+    test();
 
 //    client2.addStatusListener((status) async {
 //      if (status == ConnectStatus.connected) {
@@ -44,39 +64,37 @@ class _MyAppState extends State<MyApp> {
 //    });
   }
 
+  test() async {
+    list = await client.getSubscriptions();
+  }
+
   @override
   Widget build(BuildContext context) {
-    client.setCredentials(userCredentials);
-
-    list = client.getSubscriptions();
-
-    /// client2.roomMessages();
-
-    //client2.sendMessage("G9D5YoNFfdhjXesdxGmbmTAKyFNsF7cDFa", "tyest");
     return MaterialApp(
         home: FutureBuilder<List<ChannelSubscription>>(
-      future: list,
-      builder: (context, snapshot) {
-        return snapshot.hasData
-            ? ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (_, int position) {
-                  final item = snapshot.data[position];
-                  print(item.name);
-                  return RaisedButton(
-                      child: Text(item.name),
-                      onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    //  ChatRoom(item.roomId,client2)),
-                                    MyChannels(client2)),
-                          ));
-                })
-            : Center(
-                child: CircularProgressIndicator(),
-              );
-      },
-    ));
+            future: client.getSubscriptions(),
+            builder: (context, snapshot) {
+              return snapshot.hasData
+                  ? ListView.builder(
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (_, int position) {
+                        final item = snapshot.data[position];
+                        print(item.user);
+                        return item.name.contains('call')
+                            ? Container()
+                            : RaisedButton(
+                                child: Text(item.name),
+                                onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ChatRoom(item.roomId, client2)),
+                                      // MyChannels(client2)),
+                                    ));
+                      })
+                  : Center(
+                      child: CircularProgressIndicator(),
+                    );
+            }));
   }
 }

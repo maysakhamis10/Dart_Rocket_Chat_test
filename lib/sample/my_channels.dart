@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:jitsi/models/models.dart';
 import 'package:jitsi/realtime/client.dart';
 
-
-
-
 class MyChannels extends StatefulWidget {
 
   ClientReal clientReal;
@@ -23,7 +20,6 @@ class _MyChannelsState extends State<MyChannels> {
 
   @override
   Widget build(BuildContext context) {
-
     widget.clientReal.login(userCredentials);
  //   list = widget.clientReal.getChannelSubscriptions();
    list = widget.clientReal.getChannelsIn();
@@ -39,9 +35,7 @@ class _MyChannelsState extends State<MyChannels> {
                   final item = snapshot.data[position];
                   print(item.name);
                   return RaisedButton(
-
                       child:Text(item.name != null? item.name :" "),
-
                      onPressed: () => Text(item.name));
                 })
                 : Center(

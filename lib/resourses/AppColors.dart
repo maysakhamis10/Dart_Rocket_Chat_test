@@ -1,0 +1,13 @@
+import 'package:flutter/material.dart';
+const Color WHITE = Color(0xFFFFFFFF);
+const Color BLACK = Color(0xFF00000);
+const Color GRAY_WINDOW_BG = Color.fromRGBO(241, 243, 247, 1);
+const Color GRAY_SUB_FADED_TEXT = Color(0xFFB2B2B2);
+const Color SHADOW = Color(0x19010101);
+const Color SHADOW2 = Color(0x08010101);
+const Color BLUE_WHITE = Color(0xFF1E98DE);
+const Color LIGHT_BLACK = Color.fromRGBO(59, 59, 59, 1);
+const Color LIGHT_CYN_MESSAGE_BG_COLOR = Color.fromRGBO(220, 242, 255, 1);
+const Color LIGHT_GRAY_MESSAGE_BG_COLOR = Color.fromRGBO(249, 249, 249, 1);
+const Color DARK_YELLOW_AUDIO_MESSAGE_BG_COLOR = Color.fromRGBO(235, 181, 3, 1);
+const Color LIGHT_GREY = Color.fromRGBO(175, 175, 175, 20);

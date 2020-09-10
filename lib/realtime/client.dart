@@ -33,16 +33,21 @@ class ClientReal extends Object
         _ClientSubscriptionsMixin
     implements _DdpClientWrapper {
   ClientReal(String name, Uri uri, bool debug) {
-    String wsUrl = 'ws';
-    int port = 80;
-    if (uri.scheme == 'https') {
+
+    String wsUrl = '';
+    ///int port = 80;
+
+    int port = 0;
+
+
+//    if (uri.scheme == 'https') {
       wsUrl = 'wss';
-      port = 443;
-    }
-    if (uri.port != null) {
+//      port = 443;
+//    }
+//    if (uri.port != null) {
       port = uri.port;
-    }
-    wsUrl = '$wsUrl://${uri.host}:$port${uri.path}/websocket';
+    wsUrl = '$wsUrl://${uri.host}:$port${uri.path}';
+
     print('data: $wsUrl');
     this._ddp = ddp.DdpClient(name, wsUrl, uri.toString());
     if (debug) {

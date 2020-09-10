@@ -1,10 +1,6 @@
 part of realtime;
 
 abstract class _ClientMessagesMixin implements _DdpClientWrapper {
-  //https://rocket.chat/docs/developer-guides/realtime-api/method-calls/load-history/
-  // timestamp: The NEWEST message timestamp date (or null) to only retrieve messages before this time. - this is used to do pagination
-  // quantity: message quantity
-  // dateobject: the date of the last time the client got data for the room (?)
   Future<RoomMessageHistory> loadHistory(
     String roomId, {
     DateTime timestamp,
@@ -27,6 +23,7 @@ abstract class _ClientMessagesMixin implements _DdpClientWrapper {
   Future<Message> sendMessage(String roomId, String text) {
     Completer<Message> completer = Completer();
     final message = Message()
+      ..id = "11"
       ..roomId = roomId
       ..msg = text;
     this
