@@ -178,8 +178,6 @@ class _ChatRoomState extends State<ChatRoom> {
                       ),
                     ),
                     Divider(height: 0, color: Colors.black26),
-                    // SizedBox(
-                    //   height: 50,
                     Container(
                       color: Colors.white,
                       height: 50,
