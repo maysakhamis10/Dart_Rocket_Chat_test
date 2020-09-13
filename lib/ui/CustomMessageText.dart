@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:jitsi/resourses/AppColors.dart';
 import 'package:jitsi/resourses/Dimens.dart';
 import 'package:jitsi/resourses/Styles.dart';
@@ -21,53 +21,53 @@ class CustomMessageText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: DIMEN_2,
-        horizontal: DIMEN_8,
-      ),
-      margin: EdgeInsets.symmetric(
-        vertical: DIMEN_4,
-        horizontal: DIMEN_12,
-      ),
-      constraints: BoxConstraints(
-          minWidth: minWidth ?? DIMEN_100, maxWidth: maxWidth ?? DIMEN_200),
-      decoration: BoxDecoration(
-        color: messageBgColor(context),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(topLeftRadius()),
-          topRight: Radius.circular(topRightRadius()),
-          bottomLeft: Radius.circular(DIMEN_8),
-          bottomRight: Radius.circular(DIMEN_8),
+        padding: EdgeInsets.symmetric(
+          vertical: DIMEN_2,
+          horizontal: DIMEN_8,
         ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: messageAlignment(),
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(
-              vertical: DIMEN_4,
-              horizontal: DIMEN_4,
-            ),
-            child:
-                Text(message ?? "Message here...", style: MESSAGE_TEXT_STYLE),
+        margin: EdgeInsets.symmetric(
+          vertical: DIMEN_4,
+          horizontal: DIMEN_12,
+        ),
+        constraints: BoxConstraints(
+            minWidth: minWidth ?? DIMEN_100, maxWidth: maxWidth ?? DIMEN_200),
+        decoration: BoxDecoration(
+          color: messageBgColor(context),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(topLeftRadius()),
+            topRight: Radius.circular(topRightRadius()),
+            bottomLeft: Radius.circular(DIMEN_8),
+            bottomRight: Radius.circular(DIMEN_8),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: DIMEN_2,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: messageAlignment(),
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(
+                vertical: DIMEN_4,
+                horizontal: DIMEN_4,
+              ),
+              child:
+                  Text(message ?? "Message here...", style: MESSAGE_TEXT_STYLE),
             ),
-            child: messageTime(),
-          ),
-        ],
-      ),
-    );
+            Container(
+              padding: const EdgeInsets.symmetric(
+                vertical: DIMEN_2,
+              ),
+              child: messageTime(),
+            ),
+          ],
+        ),
+      );
   }
 
   Color messageBgColor(BuildContext context) {
     if (messageType == null || messageType == MessageType.sent) {
       return LIGHT_CYN_MESSAGE_BG_COLOR;
     } else {
-      return LIGHT_GRAY_MESSAGE_BG_COLOR;
+      return Colors.grey.shade200;
     }
   }
 

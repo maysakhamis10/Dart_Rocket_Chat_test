@@ -55,6 +55,13 @@ flutter:
   # assets:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
+  assets:
+    - images/play_icon.png
+    - images/ico_headphone.png
+    - images/blue_mic_icon.png
+    - images/blue_attachment_icon.png
+    - images/blue_camera_icon.png
+    - images/members_image.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

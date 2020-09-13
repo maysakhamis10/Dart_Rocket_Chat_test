@@ -23,7 +23,6 @@ abstract class _ClientMessagesMixin implements _DdpClientWrapper {
   Future<Message> sendMessage(String roomId, String text) {
     Completer<Message> completer = Completer();
     final message = Message()
-      ..id = "11"
       ..roomId = roomId
       ..msg = text;
     this

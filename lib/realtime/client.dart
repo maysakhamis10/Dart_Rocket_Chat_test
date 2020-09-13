@@ -9,11 +9,17 @@ import 'package:ddp/ddp.dart' as ddp;
 import 'package:jitsi/models/models.dart';
 
 part 'channels.dart';
+
 part 'emoji.dart';
+
 part 'events.dart';
+
 part 'messages.dart';
+
 part 'permissons.dart';
+
 part 'subscriptions.dart';
+
 part 'users.dart';
 
 abstract class _DdpClientWrapper {
@@ -33,19 +39,10 @@ class ClientReal extends Object
         _ClientSubscriptionsMixin
     implements _DdpClientWrapper {
   ClientReal(String name, Uri uri, bool debug) {
-
     String wsUrl = '';
-    ///int port = 80;
-
     int port = 0;
-
-
-//    if (uri.scheme == 'https') {
-      wsUrl = 'wss';
-//      port = 443;
-//    }
-//    if (uri.port != null) {
-      port = uri.port;
+    wsUrl = 'wss';
+    port = uri.port;
     wsUrl = '$wsUrl://${uri.host}:$port${uri.path}';
 
     print('data: $wsUrl');
@@ -77,7 +74,6 @@ class ClientReal extends Object
     this._getDdpClient().addStatusListener(listener);
     print(this._getDdpClient().stats());
   }
-
 }
 
 final Random _random = Random(DateTime.now().millisecondsSinceEpoch);

@@ -27,29 +27,31 @@ class CustomMessageInputState extends State<CustomMessageInput> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           CustomIconButton(
-            iconSize: 55,
+            iconSize: 35,
             iconAsset: CAMERA_MESSAGE,
             iconColor: BLUE_WHITE,
             onPressed: () {},
           ),
           CustomIconButton(
-            iconSize: 55,
+            iconSize: 35,
             iconAsset: ATTACHMENT_MESSAGE,
             iconColor: BLUE_WHITE,
             onPressed: () {},
           ),
           _getTextField(),
           CustomIconButton(
-            iconSize: 55,
+            iconSize: 35,
             iconColor: BLUE_WHITE,
             icon: Icon(
               Icons.send,
               color: BLUE_WHITE,
             ),
-            onPressed: () {},
+            onPressed: () {
+              widget.sendMessage();
+            },
           ),
           CustomIconButton(
-            iconSize: 55,
+            iconSize: 35,
             iconAsset: MIC_MESSAGE,
             iconColor: BLUE_WHITE,
             onPressed: () {},

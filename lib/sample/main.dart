@@ -20,7 +20,15 @@ class MyHttpOverrides extends HttpOverrides {
 
 void main() {
   HttpOverrides.global = new MyHttpOverrides();
-  runApp(MyApp());
+  runApp(MaterialApp(
+      theme: ThemeData(
+        primaryColor: Colors.blue,
+        primaryColorDark: Colors.blue,
+          fontFamily: "Roboto",
+        primarySwatch: Colors.blue,
+        platform: TargetPlatform.android,
+      ),
+      home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -42,7 +50,7 @@ class _MyAppState extends State<MyApp> {
 
   ClientReal client2 = new ClientReal(
       "pa0707",
-      Uri(scheme: "https", host: "rocketdev.itgsolutions.com", port: 3000),
+      Uri(scheme: "https", host: "rocketdev.itgsolutions.com", port: 443),
       false);
 
   List<ChannelSubscription> list = new List();
@@ -70,31 +78,30 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: FutureBuilder<List<ChannelSubscription>>(
-            future: client.getSubscriptions(),
-            builder: (context, snapshot) {
-              return snapshot.hasData
-                  ? ListView.builder(
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (_, int position) {
-                        final item = snapshot.data[position];
-                        print(item.user);
-                        return item.name.contains('call')
-                            ? Container()
-                            : RaisedButton(
-                                child: Text(item.name),
-                                onPressed: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ChatRoom(item.roomId, client2)),
-                                      // MyChannels(client2)),
-                                    ));
-                      })
-                  : Center(
-                      child: CircularProgressIndicator(),
-                    );
-            }));
+    return FutureBuilder<List<ChannelSubscription>>(
+        future: client.getSubscriptions(),
+        builder: (context, snapshot) {
+          return snapshot.hasData
+              ? ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (_, int position) {
+                    final item = snapshot.data[position];
+                    print(item.user.id);
+                    return item.name.contains('call')
+                        ? Container()
+                        : RaisedButton(
+                            child: Text(item.name),
+                            onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ChatRoom(
+                                          item.roomId, item.user.id, client2)),
+                                  // MyChannels(client2)),
+                                ));
+                  })
+              : Center(
+                  child: CircularProgressIndicator(),
+                );
+        });
   }
 }
