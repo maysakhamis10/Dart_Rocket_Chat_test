@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:jitsi/resourses/AppColors.dart';
 import 'package:jitsi/resourses/Dimens.dart';
 import 'package:jitsi/resourses/Styles.dart';
@@ -8,7 +9,7 @@ enum MessageType { sent, received }
 class CustomMessageText extends StatelessWidget {
   double minWidth, maxWidth;
   String message;
-  String time;
+  DateTime time;
   MessageType messageType;
 
   CustomMessageText(
@@ -72,7 +73,7 @@ class CustomMessageText extends StatelessWidget {
   }
 
   Text messageTime() {
-    return Text(time ?? "Time", style: TIME_STYLE);
+    return Text(getTime(time) ?? "Time", style: TIME_STYLE);
   }
 
   double topLeftRadius() {
@@ -99,8 +100,8 @@ class CustomMessageText extends StatelessWidget {
     }
   }
 
-  String timeFromTimeStamp(int time) {
-    var date = new DateTime.fromMillisecondsSinceEpoch(time * 1000);
-    return date.toIso8601String();
+  String getTime(DateTime timestamp) {
+    var format = new DateFormat('yyyy-MM-dd – hh:mm a').format(timestamp);
+    return format;
   }
 }

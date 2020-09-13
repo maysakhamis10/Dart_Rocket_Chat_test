@@ -28,3 +28,14 @@ const TextStyle WHITE_HEAVY_SMALL = TextStyle(
   fontFamily: 'Bold',
   fontWeight: FontWeight.w700,
 );
+const TextStyle BLUE_TITLE_TEXT_STYLE = TextStyle(
+  color: BLUE_TEXT,
+  fontSize: DIMEN_15,
+  fontFamily: "Roboto",
+);
+const TextStyle SUBLABEL_GRAY_BOLD = TextStyle(
+  color: GRAY_SUB_FADED_TEXT,
+  fontSize: DIMEN_13,
+  fontFamily: "Roboto",
+);
+

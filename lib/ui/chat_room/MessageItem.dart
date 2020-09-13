@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jitsi/resourses/Dimens.dart';
 import 'CustomAudioMessages.dart';
-import 'CustomProfileImage.dart';
+import '../CustomProfileImage.dart';
 import 'CustomMessageText.dart';
 
 class MessageItem extends StatelessWidget {
   String message;
   MessageType messageType;
-  String time;
+  DateTime time;
   double maxWidth;
   double minWidth;
   String userImageUrl;
@@ -33,7 +33,7 @@ class MessageItem extends StatelessWidget {
       child: Row(
         children: <Widget>[
           messageType == MessageType.received
-              ? CustomProfileImage()
+              ? CustomProfileImage(userImageUrl: "")
               : Container(),
           messageAttachments == "Audio"
               ? MessagesCustomAudio(
@@ -47,7 +47,7 @@ class MessageItem extends StatelessWidget {
                 ),
           messageType == MessageType.received
               ? Container()
-              : CustomProfileImage(),
+              : CustomProfileImage(userImageUrl: ""),
         ],
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: messageRowAlignment(),

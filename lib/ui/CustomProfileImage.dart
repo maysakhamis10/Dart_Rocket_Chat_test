@@ -7,7 +7,7 @@ class CustomProfileImage extends StatelessWidget {
   String userImageUrl;
   double raduis;
 
-  CustomProfileImage({this.userImageUrl, this.raduis});
+  CustomProfileImage({@required this.userImageUrl, this.raduis});
 
   @override
   Widget build(BuildContext context) {

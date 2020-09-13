@@ -3,10 +3,12 @@ part of rest;
 abstract class _ClientSubscriptionsMixin implements _ClientWrapper {
   Future<List<ChannelSubscription>> getSubscriptions() {
     Completer<List<ChannelSubscription>> completer = Completer();
-    http.get('${_getUrl()}/subscriptions.get', headers: {
-      'X-User-Id': _auth._id,
-      'X-Auth-Token': _auth._token,
-    },
+    http.get(
+      '${_getUrl()}/subscriptions.get',
+      headers: {
+        'X-User-Id': _auth._id,
+        'X-Auth-Token': _auth._token,
+      },
     ).then((response) {
       _hackResponseHeader(response);
       final rawRoomsList = json.decode(response.body)['update'] as List;

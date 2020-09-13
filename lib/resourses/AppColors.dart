@@ -11,3 +11,5 @@ const Color LIGHT_CYN_MESSAGE_BG_COLOR = Color.fromRGBO(220, 242, 255, 1);
 const Color LIGHT_GRAY_MESSAGE_BG_COLOR = Color.fromRGBO(249, 249, 249, 1);
 const Color DARK_YELLOW_AUDIO_MESSAGE_BG_COLOR = Color.fromRGBO(235, 181, 3, 1);
 const Color LIGHT_GREY = Color.fromRGBO(175, 175, 175, 20);
+const Color UNSELECTED_GREY = Color(0xFF757575);
+const Color BLUE_TEXT = Color(0xFF1E98DE);

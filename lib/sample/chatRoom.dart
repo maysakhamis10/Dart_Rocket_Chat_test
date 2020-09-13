@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:jitsi/models/models.dart';
 import 'package:jitsi/realtime/client.dart';
 import 'package:jitsi/rest/client.dart';
-import 'package:jitsi/ui/CustomMessageInput.dart';
-import 'package:jitsi/ui/CustomMessageText.dart';
-import 'package:jitsi/ui/MessageItem.dart';
-import 'package:intl/intl.dart';
+import 'package:jitsi/ui/chat_room/CustomMessageInput.dart';
+import 'package:jitsi/ui/chat_room/CustomMessageText.dart';
+import 'package:jitsi/ui/chat_room/MessageItem.dart';
 
 class ChatRoom extends StatefulWidget {
   String roomId = "";
-  String receiverId = "";
   ClientReal clientReal;
 
-  ChatRoom(this.roomId, this.receiverId, this.clientReal);
+  ChatRoom(this.roomId, this.clientReal);
 
   @override
   _ChatRoomState createState() => _ChatRoomState();
@@ -84,8 +82,7 @@ class _ChatRoomState extends State<ChatRoom> {
                                       final item = snapshot.data[position];
                                       return MessageItem(
                                         message: item.msg,
-                                        time: getTime(item
-                                            .timestamp.millisecondsSinceEpoch),
+                                        time: item.timestamp,
                                         messageType:
                                             userCredentials.id == item.user.id
                                                 ? MessageType.sent
@@ -117,9 +114,4 @@ class _ChatRoomState extends State<ChatRoom> {
     clientReal.sendMessage(widget.roomId, _text.text);
   }
 
-  String getTime(int timestamp) {
-    var format = new DateFormat('d MMM, hh:mm a');
-    var date = new DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-    return format.format(date);
-  }
 }
