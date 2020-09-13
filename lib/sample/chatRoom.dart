@@ -30,12 +30,19 @@ class _ChatRoomState extends State<ChatRoom> {
   UserCredentials userCredentials = new UserCredentials(
       id: "b5xdRX58zNb2DmqzA",
       token: "nTNC-NpoY2KChS184hQWPjtdvW_J6AzmsafJBJGBRGk");
+  ScrollController _scrollController = new ScrollController();
 
   @override
   void initState() {
     super.initState();
     clientReal = widget.clientReal;
     client.setCredentials(userCredentials);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut);
+    });
 //    Future<List<Channel>> channels = widget.clientReal.getChannelsIn();
 //    Stream<Channel> streamChannel=widget.clientReal.roomsChanged();
 //    streamChannel.listen((onData){
@@ -75,8 +82,10 @@ class _ChatRoomState extends State<ChatRoom> {
                       child: FutureBuilder<List<Message>>(
                           future: client.loadIMHistory(widget.roomId),
                           builder: (context, snapshot) {
+
                             return snapshot.hasData
                                 ? ListView.builder(
+                                    controller: _scrollController,
                                     itemCount: snapshot.data.length,
                                     itemBuilder: (_, int position) {
                                       final item = snapshot.data[position];
@@ -113,5 +122,4 @@ class _ChatRoomState extends State<ChatRoom> {
   void sendMessage() {
     clientReal.sendMessage(widget.roomId, _text.text);
   }
-
 }
