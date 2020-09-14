@@ -36,7 +36,7 @@ abstract class _ClientIMMixin implements _ClientWrapper {
       for (var raw in raws) {
         results.add(Message.fromJson(raw));
       }
-      completer.complete(results.reversed.toList());
+      completer.complete(results);
     }).catchError((error) => completer.completeError(error));
     return completer.future;
   }

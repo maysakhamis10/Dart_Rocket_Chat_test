@@ -19,7 +19,7 @@ class ChatRoom extends StatefulWidget {
   _ChatRoomState createState() => _ChatRoomState();
 }
 
-class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
+class _ChatRoomState extends State<ChatRoom> {
   TextEditingController _text = new TextEditingController();
   var childList = <Widget>[];
   Client client = new Client(
@@ -42,7 +42,6 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
     clientReal = widget.clientReal;
     client.setCredentials(userCredentials);
     _scrollController = new ScrollController();
-    WidgetsBinding.instance.addObserver(this);
 
 //    Future<List<Channel>> channels = widget.clientReal.getChannelsIn();
 //    Stream<Channel> streamChannel=widget.clientReal.roomsChanged();
@@ -65,14 +64,7 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addObserver(this);
     return Scaffold(
         appBar: AppBar(
           title: FutureBuilder<ChannelSubscription>(
@@ -152,11 +144,6 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
       _scrollController.animateTo(_scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
     });
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('state = $state');
   }
 
   @override
