@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:jitsi/models/models.dart';
+import 'package:jitsi/realtime/client.dart';
 import 'package:jitsi/resourses/Styles.dart';
+import 'package:jitsi/rest/client.dart';
 import 'package:jitsi/room_realtime_repo.dart';
 import 'package:jitsi/ui/chat_room/CustomMessageInput.dart';
 import 'package:jitsi/ui/chat_room/CustomMessageText.dart';
 import 'package:jitsi/ui/chat_room/MessageItem.dart';
-import 'package:rocket_chat_dart/models/models.dart';
-import 'package:rocket_chat_dart/realtime/client.dart';
-import 'package:rocket_chat_dart/rest/client.dart';
 
 import 'MessagesModel.dart';
 
@@ -36,8 +36,10 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
     _scrollController = new ScrollController();
     WidgetsBinding.instance.addObserver(this);
     widget.clientReal.roomMessages().listen((data) {
-      var valuesList = data.doc.values.toList();
-      print("new Value ====>>${valuesList.length}");
+      if (data.doc != null && data.doc.values != null) {
+        var valuesList = data.doc.values.toList();
+        print("new Value ====>>${valuesList.length}");
+      }
     });
 
     streamController.stream.listen((event) {
@@ -103,7 +105,7 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
                                       return MessageItem(
                                         message: item.msg,
                                         time: item.timestamp,
-                                        messageType: widget.client.auth.id ==
+                                        messageType: widget.client.getId() ==
                                                 item.user.id
                                             ? MessageType.sent
                                             : MessageType.received,
