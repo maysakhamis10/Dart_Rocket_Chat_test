@@ -22,11 +22,12 @@ class CustomIconButton extends StatelessWidget {
     return IconButton(
       icon: Transform.scale(
         scale: scale,
-        child: icon ?? ImageIcon(
-          AssetImage(iconAsset),
-          color: iconColor,
-          size: iconSize,
-        ),
+        child: icon ??
+            ImageIcon(
+              AssetImage(iconAsset),
+              color: iconColor,
+              size: iconSize,
+            ),
       ),
       padding: const EdgeInsets.all(0),
       onPressed: onPressed,
