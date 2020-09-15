@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:jitsi/realtime/client.dart';
 import 'package:jitsi/services/authentication_service.dart';
 import 'package:jitsi/services/http_service.dart';
-import 'package:rocket_chat_dart/models/models.dart';
-import 'package:rocket_chat_dart/realtime/client.dart';
+
 import 'package:ddp/ddp.dart';
 import 'package:http/http.dart' as http;
 
 import 'base_repo.dart';
+import 'models/models.dart';
 
 class RoomRealTimeRepo extends BaseRepo {
   static HttpService httpService;

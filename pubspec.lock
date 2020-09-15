@@ -485,13 +485,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
-  rocket_chat_dart:
-    dependency: "direct main"
-    description:
-      name: rocket_chat_dart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.38"
   shelf:
     dependency: transitive
     description:
