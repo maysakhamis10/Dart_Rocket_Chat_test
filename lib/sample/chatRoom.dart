@@ -1,66 +1,51 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:jitsi/models/models.dart';
-import 'package:jitsi/realtime/client.dart';
 import 'package:jitsi/resourses/Styles.dart';
-import 'package:jitsi/rest/client.dart';
+import 'package:jitsi/room_realtime_repo.dart';
 import 'package:jitsi/ui/chat_room/CustomMessageInput.dart';
 import 'package:jitsi/ui/chat_room/CustomMessageText.dart';
 import 'package:jitsi/ui/chat_room/MessageItem.dart';
+import 'package:rocket_chat_dart/models/models.dart';
+import 'package:rocket_chat_dart/realtime/client.dart';
+import 'package:rocket_chat_dart/rest/client.dart';
 
 class ChatRoom extends StatefulWidget {
   String roomId = "";
+  Channel channel;
+  Client client;
   ClientReal clientReal;
 
-  ChatRoom(this.roomId, this.clientReal);
+  ChatRoom(this.roomId, this.client, this.clientReal, {this.channel});
 
   @override
   _ChatRoomState createState() => _ChatRoomState();
 }
 
 class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
-  TextEditingController _text = new TextEditingController();
   var childList = <Widget>[];
-  Client client = new Client(
-      Uri(
-        scheme: "http",
-        host: "rocketdev.itgsolutions.com",
-      ),
-      false);
 
-  ClientReal clientReal;
-  UserCredentials userCredentials = new UserCredentials(
-      id: "b5xdRX58zNb2DmqzA",
-      token: "nTNC-NpoY2KChS184hQWPjtdvW_J6AzmsafJBJGBRGk");
   ScrollController _scrollController;
   StreamController<bool> streamController = StreamController<bool>();
+  Future<ChannelSubscription> messages;
 
   @override
   void initState() {
     super.initState();
-    clientReal = widget.clientReal;
-    client.setCredentials(userCredentials);
     _scrollController = new ScrollController();
     WidgetsBinding.instance.addObserver(this);
+    widget.clientReal.roomMessages().listen((data) {
+      var valuesList = data.doc.values.toList();
+      print("new Value ====>>${valuesList.length}");
+    });
 
-//    Future<List<Channel>> channels = widget.clientReal.getChannelsIn();
-//    Stream<Channel> streamChannel=widget.clientReal.roomsChanged();
-//    streamChannel.listen((onData){
-//      print(onData);
-//    });
-//    Stream<UpdateEvent> roomMessage= widget.clientReal.roomMessages();
-//    roomMessage.listen((onData){
-//      print(onData);
-//    });
-/*
-    widget.clientReal.subRoomsChanged(widget.id);
-*/
     streamController.stream.listen((event) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
-      });
+      if (event)
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOut);
+        });
     });
   }
 
@@ -75,8 +60,9 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     return Scaffold(
         appBar: AppBar(
+          //  title: FutureBuilder<Channel>(
           title: FutureBuilder<ChannelSubscription>(
-              future: client.getSubscriptionsOne(widget.roomId),
+              future: widget.client.getSubscriptionsOne(widget.roomId),
               builder: (_, response) {
                 return response.hasData && response.data != null
                     ? Text(response.data.name)
@@ -91,42 +77,41 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
                 Flexible(
                   fit: FlexFit.tight,
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Container(
-                        child: FutureBuilder<List<Message>>(
-                            future: client.loadIMHistory(widget.roomId),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData && snapshot.data != null) {
-                                if (snapshot.data.length == 0) {
-                                  return Center(
-                                    child: Text(
-                                      "Start messaging...",
-                                      style: MESSAGE_TEXT_STYLE,
-                                    ),
-                                  );
-                                } else {
-                                  return ListView.builder(
-                                      controller: _scrollController,
-                                      itemCount: snapshot.data.length,
-                                      itemBuilder: (_, int position) {
-                                        final item = snapshot.data[position];
-                                        streamController.add(true);
-                                        return MessageItem(
-                                          message: item.msg,
-                                          time: item.timestamp,
-                                          messageType:
-                                              userCredentials.id == item.user.id
-                                                  ? MessageType.sent
-                                                  : MessageType.received,
-                                        );
-                                      });
-                                }
-                              } else
+                      width: MediaQuery.of(context).size.width,
+                      child: FutureBuilder<List<Message>>(
+                          future: widget.client.loadIMHistory(widget.roomId),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData && snapshot.data != null) {
+                              if (snapshot.data.length == 0) {
                                 return Center(
-                                  child: CircularProgressIndicator(),
+                                  child: Text(
+                                    "Start messaging...",
+                                    style: MESSAGE_TEXT_STYLE,
+                                  ),
                                 );
-                            })),
-                  ),
+                              } else {
+                                List newList = snapshot.data.reversed.toList();
+                                return ListView.builder(
+                                    controller: _scrollController,
+                                    itemCount: newList.length,
+                                    itemBuilder: (_, int position) {
+                                      final item = newList[position];
+                                      streamController.add(true);
+                                      return MessageItem(
+                                        message: item.msg,
+                                        time: item.timestamp,
+                                        messageType: widget.client.auth.id ==
+                                                item.user.id
+                                            ? MessageType.sent
+                                            : MessageType.received,
+                                      );
+                                    });
+                              }
+                            } else
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                          })),
                 ),
                 Divider(height: 0, color: Colors.black26),
                 Container(
@@ -142,8 +127,8 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
         ])));
   }
 
-  void sendMessage() {
-    clientReal.sendMessage(widget.roomId, _text.text);
+  void sendMessage(String text) {
+    widget.clientReal.sendMessage(widget.roomId, text);
   }
 
   void didUpdateWidget(ChatRoom oldWidget) {

@@ -30,6 +30,8 @@ dependencies:
   json_annotation: ^2.0.0
   audioplayers: ^0.15.1
   intl: ^0.16.1
+  rocket_chat_dart: ^0.0.38
+  dio: ^3.0.9
 
 
 dev_dependencies:
