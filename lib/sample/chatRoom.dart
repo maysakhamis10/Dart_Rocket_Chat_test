@@ -9,6 +9,8 @@ import 'package:rocket_chat_dart/models/models.dart';
 import 'package:rocket_chat_dart/realtime/client.dart';
 import 'package:rocket_chat_dart/rest/client.dart';
 
+import 'MessagesModel.dart';
+
 class ChatRoom extends StatefulWidget {
   String roomId = "";
   Channel channel;
@@ -23,7 +25,7 @@ class ChatRoom extends StatefulWidget {
 
 class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
   var childList = <Widget>[];
-
+  MessagesModel messagesModel = MessagesModel();
   ScrollController _scrollController;
   StreamController<bool> streamController = StreamController<bool>();
   Future<ChannelSubscription> messages;
@@ -91,6 +93,7 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
                                 );
                               } else {
                                 List newList = snapshot.data.reversed.toList();
+                                messagesModel.addAll(newList);
                                 return ListView.builder(
                                     controller: _scrollController,
                                     itemCount: newList.length,
