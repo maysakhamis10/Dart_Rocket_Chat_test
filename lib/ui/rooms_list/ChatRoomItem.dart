@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:jitsi/models/models.dart';
 import 'package:jitsi/resourses/Styles.dart';
-import 'package:rocket_chat_dart/models/models.dart';
+
 
 class ChatRoomItem extends StatefulWidget {
   final Widget leading;

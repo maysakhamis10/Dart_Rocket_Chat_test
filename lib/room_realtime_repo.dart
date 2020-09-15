@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:jitsi/realtime/client.dart';
 import 'package:jitsi/services/authentication_service.dart';
 import 'package:jitsi/services/http_service.dart';
-import 'package:rocket_chat_dart/models/models.dart';
-import 'package:rocket_chat_dart/realtime/client.dart';
+
 import 'package:ddp/ddp.dart';
 import 'package:http/http.dart' as http;
 
 import 'base_repo.dart';
+import 'models/models.dart';
 
 class RoomRealTimeRepo extends BaseRepo {
   static HttpService httpService;
@@ -31,7 +32,7 @@ class RoomRealTimeRepo extends BaseRepo {
       if (status == ConnectStatus.connected) {
         User user = await client.login(new UserCredentials(
             id: "b5xdRX58zNb2DmqzA",
-            token: "nTNC-NpoY2KChS184hQWPjtdvW_J6AzmsafJBJGBRGk"));
+            token: "FNaYYP9MKOgdTXuUpwK3f3f-dLfpxaitlAvSnBLj72c"));
         List<Channel> channels = await client.getChannelsIn();
         channels.forEach((channel) {
           if (channel.id == roomId) {

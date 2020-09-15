@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:jitsi/models/models.dart';
+import 'package:jitsi/realtime/client.dart';
 import 'package:jitsi/resourses/Styles.dart';
+import 'package:jitsi/rest/client.dart';
 import 'package:jitsi/room_realtime_repo.dart';
 import 'package:jitsi/ui/chat_room/CustomMessageInput.dart';
 import 'package:jitsi/ui/chat_room/CustomMessageText.dart';
 import 'package:jitsi/ui/chat_room/MessageItem.dart';
-import 'package:rocket_chat_dart/models/models.dart';
-import 'package:rocket_chat_dart/realtime/client.dart';
-import 'package:rocket_chat_dart/rest/client.dart';
 
 class ChatRoom extends StatefulWidget {
   String roomId = "";
@@ -34,8 +34,10 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
     _scrollController = new ScrollController();
     WidgetsBinding.instance.addObserver(this);
     widget.clientReal.roomMessages().listen((data) {
-      var valuesList = data.doc.values.toList();
-      print("new Value ====>>${valuesList.length}");
+      if (data.doc != null && data.doc.values != null) {
+        var valuesList = data.doc.values.toList();
+        print("new Value ====>>${valuesList.length}");
+      }
     });
 
     streamController.stream.listen((event) {
@@ -60,15 +62,14 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     return Scaffold(
         appBar: AppBar(
-          //  title: FutureBuilder<Channel>(
-          title: FutureBuilder<ChannelSubscription>(
-              future: widget.client.getSubscriptionsOne(widget.roomId),
-              builder: (_, response) {
-                return response.hasData && response.data != null
-                    ? Text(response.data.name)
-                    : Text("");
-              }),
-        ),
+            //  title: FutureBuilder<Channel>(
+            title: FutureBuilder<ChannelSubscription>(
+                future: widget.client.getSubscriptionsOne(widget.roomId),
+                builder: (_, response) {
+                  return response.hasData && response.data != null
+                      ? Text(response.data.name)
+                      : Text("");
+                })),
         body: Container(
             child: Stack(fit: StackFit.loose, children: <Widget>[
           Column(
@@ -100,7 +101,7 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
                                       return MessageItem(
                                         message: item.msg,
                                         time: item.timestamp,
-                                        messageType: widget.client.auth.id ==
+                                        messageType: widget.client.getId() ==
                                                 item.user.id
                                             ? MessageType.sent
                                             : MessageType.received,
