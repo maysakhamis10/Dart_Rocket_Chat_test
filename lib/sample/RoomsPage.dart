@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:jitsi/models/models.dart';
-import 'package:jitsi/realtime/client.dart';
-import 'package:jitsi/rest/client.dart';
+import 'package:jitsi/room_realtime_repo.dart';
 import 'package:jitsi/ui/rooms_list/ChatRoomCircleAvatar.dart';
 import 'package:jitsi/ui/rooms_list/ChatRoomItem.dart';
+import 'package:rocket_chat_dart/models/models.dart';
+import 'package:rocket_chat_dart/realtime/client.dart';
+import 'package:rocket_chat_dart/rest/client.dart';
 
 import 'chatRoom.dart';
 
@@ -13,57 +14,55 @@ class ChatRooms extends StatefulWidget {
 }
 
 class _ChatRoomsState extends State<ChatRooms> {
-  Client client = new Client(
-      Uri(
-        scheme: "http",
-        host: "rocketdev.itgsolutions.com",
-      ),
-      false);
-
-  UserCredentials userCredentials = new UserCredentials(
-      id: "b5xdRX58zNb2DmqzA",
-      token: "nTNC-NpoY2KChS184hQWPjtdvW_J6AzmsafJBJGBRGk");
-
-  ClientReal client2 = new ClientReal(
-      "pa0707",
-      Uri(scheme: "https", host: "rocketdev.itgsolutions.com", port: 443),
-      false);
+  Client client;
+  ClientReal clientReal;
+  String roomId;
 
   List<ChannelSubscription> list = new List();
 
   @override
   void initState() {
     super.initState();
+
+    client = new Client(
+        Uri(
+          scheme: "http",
+          host: "rocketdev.itgsolutions.com",
+        ),
+        false);
+
+    UserCredentials userCredentials = new UserCredentials(
+        id: "b5xdRX58zNb2DmqzA",
+        token: "nTNC-NpoY2KChS184hQWPjtdvW_J6AzmsafJBJGBRGk");
     client.setCredentials(userCredentials);
-//    client2.addStatusListener((status) async {
-//      if (status == ConnectStatus.connected) {
-//        final channels = await client2.getChannelsIn();
-//        channels.forEach((channel) {
-//          client2.subRoomMessages(channel.id);
-//        });
-//        client2.roomMessages().listen((data) => print(data.doc));
-//      }
-//    });
   }
 
   @override
   Widget build(BuildContext context) {
+    initializingclientReal();
     return Scaffold(
         body: FutureBuilder<List<ChannelSubscription>>(
+//        body: FutureBuilder<List<Channel>>(
             future: client.getSubscriptions(),
+            // future: client.getRooms(),
             builder: (context, snapshot) {
               return snapshot.hasData
                   ? ListView.builder(
                       itemCount: snapshot.data.length,
                       itemBuilder: (_, int position) {
                         final item = snapshot.data[position];
-                        return item != null && !item.name.contains("call")
+                        roomId = item != null ? item.roomId : "";
+                        return item != null &&
+                                //  item.name != null &&
+                                !item.name.contains("call")
                             ? ChatRoomItem(
                                 leading: ChatRoomCircleAvatar(
                                   imageUrl: "",
-                                  status: item.user.status == null
+                                  status: item.user != null &&
+                                          item.user.status == null
                                       ? ChatStatus.offline
-                                      : item.user.status != null &&
+                                      : item.user != null &&
+                                              item.user.status != null &&
                                               item.user.status == "online"
                                           ? ChatStatus.online
                                           : ChatStatus.busy,
@@ -79,10 +78,16 @@ class _ChatRoomsState extends State<ChatRooms> {
             }));
   }
 
+  initializingclientReal() async {
+    clientReal =
+        await RoomRealTimeRepo.startRoomChat(roomId, 'pa0707', 'Ab@123456');
+  }
+
+//  navigateToChat(String id, Channel item) {
   navigateToChat(String id) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ChatRoom(id, client2)),
+      MaterialPageRoute(builder: (context) => ChatRoom(id, client, clientReal)),
     );
   }
 }

@@ -176,6 +176,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.13"
+  dio:
+    dependency: "direct main"
+    description:
+      name: dio
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.10"
   file:
     dependency: transitive
     description:
@@ -478,6 +485,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  rocket_chat_dart:
+    dependency: "direct main"
+    description:
+      name: rocket_chat_dart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.38"
   shelf:
     dependency: transitive
     description:

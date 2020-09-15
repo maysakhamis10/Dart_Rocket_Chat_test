@@ -7,6 +7,8 @@ import 'CustomIconButton.dart';
 
 class CustomMessageInput extends StatefulWidget {
   Function sendMessage;
+  double iconSize;
+  Color iconColor;
 
   CustomMessageInput({@required this.sendMessage});
 
@@ -18,6 +20,7 @@ class CustomMessageInput extends StatefulWidget {
 
 class CustomMessageInputState extends State<CustomMessageInput> {
   String hintText = 'Type a message...';
+  TextEditingController _text = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -26,17 +29,23 @@ class CustomMessageInputState extends State<CustomMessageInput> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          CustomIconButton(
-            iconSize: 35,
-            iconAsset: CAMERA_MESSAGE,
-            iconColor: BLUE_WHITE,
-            onPressed: () {},
+          Visibility(
+            visible: true,
+            child: CustomIconButton(
+              iconSize: 35,
+              iconAsset: CAMERA_MESSAGE,
+              iconColor: BLUE_WHITE,
+              onPressed: () {},
+            ),
           ),
-          CustomIconButton(
-            iconSize: 35,
-            iconAsset: ATTACHMENT_MESSAGE,
-            iconColor: BLUE_WHITE,
-            onPressed: () {},
+          Visibility(
+            visible: true,
+            child: CustomIconButton(
+              iconSize: 35,
+              iconAsset: ATTACHMENT_MESSAGE,
+              iconColor: BLUE_WHITE,
+              onPressed: () {},
+            ),
           ),
           _getTextField(),
           CustomIconButton(
@@ -47,14 +56,20 @@ class CustomMessageInputState extends State<CustomMessageInput> {
               color: BLUE_WHITE,
             ),
             onPressed: () {
-              widget.sendMessage();
+              if (_text.text.isNotEmpty) {
+                widget.sendMessage(_text.text);
+                _text.text = "";
+              }
             },
           ),
-          CustomIconButton(
-            iconSize: 35,
-            iconAsset: MIC_MESSAGE,
-            iconColor: BLUE_WHITE,
-            onPressed: () {},
+          Visibility(
+            visible: true,
+            child: CustomIconButton(
+              iconSize: 35,
+              iconAsset: MIC_MESSAGE,
+              iconColor: BLUE_WHITE,
+              onPressed: () {},
+            ),
           ),
         ],
       ),
@@ -70,6 +85,7 @@ class CustomMessageInputState extends State<CustomMessageInput> {
           borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
         child: TextField(
+          controller: _text,
           decoration: InputDecoration(
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),

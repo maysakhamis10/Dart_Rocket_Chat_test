@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:jitsi/models/models.dart';
 import 'package:jitsi/resourses/Styles.dart';
+import 'package:rocket_chat_dart/models/models.dart';
 
 class ChatRoomItem extends StatefulWidget {
   final Widget leading;
+
   final ChannelSubscription channel;
+//  final Channel channel;
   final Function onTapFunction;
 
   ChatRoomItem({
@@ -31,6 +33,7 @@ class _ChatRoomItemState extends State<ChatRoomItem> {
       onTap: () {
         setState(() {
           widget.onTapFunction(widget.channel.roomId);
+//          widget.onTapFunction(widget.channel);
         });
       },
       child: Column(
@@ -60,6 +63,7 @@ class _ChatRoomItemState extends State<ChatRoomItem> {
   }
 
   Widget _getChatTitle(ChannelSubscription sender) {
+//  Widget _getChatTitle(Channel sender) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,9 +79,7 @@ class _ChatRoomItemState extends State<ChatRoomItem> {
                   style: BLUE_TITLE_TEXT_STYLE.copyWith(fontSize: 13),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis),
-              _getLastMessageText(
-                  /*sender.lastMessage != null ? sender.lastMessage.msg :*/
-                  ""),
+//              _getLastMessageText(sender.lastMessage != null ? sender.lastMessage.msg : ""),
             ],
           ),
         ),
