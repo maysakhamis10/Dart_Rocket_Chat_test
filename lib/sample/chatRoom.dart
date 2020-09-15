@@ -64,15 +64,14 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     return Scaffold(
         appBar: AppBar(
-          //  title: FutureBuilder<Channel>(
-          title: FutureBuilder<ChannelSubscription>(
-              future: widget.client.getSubscriptionsOne(widget.roomId),
-              builder: (_, response) {
-                return response.hasData && response.data != null
-                    ? Text(response.data.name)
-                    : Text("");
-              }),
-        ),
+            //  title: FutureBuilder<Channel>(
+            title: FutureBuilder<ChannelSubscription>(
+                future: widget.client.getSubscriptionsOne(widget.roomId),
+                builder: (_, response) {
+                  return response.hasData && response.data != null
+                      ? Text(response.data.name)
+                      : Text("");
+                })),
         body: Container(
             child: Stack(fit: StackFit.loose, children: <Widget>[
           Column(
