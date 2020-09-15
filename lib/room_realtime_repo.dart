@@ -32,7 +32,7 @@ class RoomRealTimeRepo extends BaseRepo {
       if (status == ConnectStatus.connected) {
         User user = await client.login(new UserCredentials(
             id: "b5xdRX58zNb2DmqzA",
-            token: "nTNC-NpoY2KChS184hQWPjtdvW_J6AzmsafJBJGBRGk"));
+            token: "FNaYYP9MKOgdTXuUpwK3f3f-dLfpxaitlAvSnBLj72c"));
         List<Channel> channels = await client.getChannelsIn();
         channels.forEach((channel) {
           if (channel.id == roomId) {

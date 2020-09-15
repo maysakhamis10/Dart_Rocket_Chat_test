@@ -6,7 +6,6 @@ import 'package:jitsi/room_realtime_repo.dart';
 import 'package:jitsi/ui/rooms_list/ChatRoomCircleAvatar.dart';
 import 'package:jitsi/ui/rooms_list/ChatRoomItem.dart';
 
-
 import 'chatRoom.dart';
 
 class ChatRooms extends StatefulWidget {
@@ -26,15 +25,11 @@ class _ChatRoomsState extends State<ChatRooms> {
     super.initState();
 
     client = new Client(
-        Uri(
-          scheme: "http",
-          host: "rocketdev.itgsolutions.com",
-        ),
-        false);
+        Uri(scheme: "http", host: "rocketdev.itgsolutions.com"), false);
 
     UserCredentials userCredentials = new UserCredentials(
         id: "b5xdRX58zNb2DmqzA",
-        token: "nTNC-NpoY2KChS184hQWPjtdvW_J6AzmsafJBJGBRGk");
+        token: "FNaYYP9MKOgdTXuUpwK3f3f-dLfpxaitlAvSnBLj72c");
     client.setCredentials(userCredentials);
   }
 

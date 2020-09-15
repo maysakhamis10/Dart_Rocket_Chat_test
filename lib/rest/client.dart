@@ -7,14 +7,20 @@ import 'package:http/http.dart' as http;
 import 'package:jitsi/models/models.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-
 part 'channels.dart';
+
 part 'chat.dart';
+
 part 'client.g.dart';
+
 part 'groups.dart';
+
 part 'im.dart';
+
 part 'rooms.dart';
+
 part 'subscriptions.dart';
+
 part 'users.dart';
 
 class _AuthInfo {
@@ -33,7 +39,6 @@ abstract class _ClientWrapper {
   String _getUrl();
 
   _AuthInfo _auth;
-
 }
 
 class Client extends Object
@@ -56,6 +61,7 @@ class Client extends Object
 
   @override
   _AuthInfo _auth;
+  _AuthInfo pauth;
 
   Client(Uri uri, this.debug)
       : this.protocol = uri.scheme,
@@ -67,8 +73,18 @@ class Client extends Object
   @override
   String _getUrl() => '$protocol://$host:$port$path/api/$version';
 
- getAuth()
-  {
-    return _auth;
+  getAuth() {
+    this.pauth = _auth;
+    return pauth;
+  }
+
+  getId() {
+    String id = getAuth()._id;
+    return id;
+  }
+
+  getToken() {
+    String token = getAuth()._token;
+    return token;
   }
 }
