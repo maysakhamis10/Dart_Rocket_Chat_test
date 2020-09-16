@@ -49,6 +49,7 @@ class CustomMessageInputState extends State<CustomMessageInput> {
                     camera: firstCamera,
                   );
                 }));
+                print("image path=====>> $imagePath");
               },
             ),
           ),

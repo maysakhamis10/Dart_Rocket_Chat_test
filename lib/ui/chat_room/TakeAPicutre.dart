@@ -134,6 +134,7 @@ class DisplayPictureScreen extends StatelessWidget {
         children: <Widget>[
           GestureDetector(
             onTap: () {
+              closeCamera();
 //                  Navigator.pop(context);
             },
             child: Container(
@@ -153,6 +154,7 @@ class DisplayPictureScreen extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
+              sendImage();
               /* Navigator.pushReplacement(
                       context, MaterialPageRoute(builder: (context) {
                     return ChatRoom()
