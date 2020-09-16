@@ -33,7 +33,7 @@ class _ChatRoomsState extends State<ChatRooms> {
 
   @override
   Widget build(BuildContext context) {
-    initializingclientReal();
+    //  initializingclientReal();
     return Scaffold(
         body: FutureBuilder<List<ChannelSubscription>>(
             future: client.getSubscriptions(),
@@ -68,12 +68,14 @@ class _ChatRoomsState extends State<ChatRooms> {
             }));
   }
 
-  initializingclientReal() async {
-    clientReal =
-        await RoomRealTimeRepo.startRoomChat(roomId, 'pa0707', 'Ab@123456');
-  }
+  initializingclientReal() async {}
 
-  navigateToChat(String id) {
+
+//  navigateToChat(String id, Channel item) {
+  navigateToChat(String id) async {
+    clientReal =
+        await RoomRealTimeRepo.startRoomChat(id, 'pa0707', 'Ab@123456');
+
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => ChatRoom(id, client, clientReal)),
