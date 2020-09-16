@@ -8,7 +8,6 @@ class ChatRoomItem extends StatefulWidget {
   final Widget leading;
 
   final ChannelSubscription channel;
-//  final Channel channel;
   final Function onTapFunction;
 
   ChatRoomItem({
@@ -34,7 +33,6 @@ class _ChatRoomItemState extends State<ChatRoomItem> {
       onTap: () {
         setState(() {
           widget.onTapFunction(widget.channel.roomId);
-//          widget.onTapFunction(widget.channel);
         });
       },
       child: Column(
@@ -64,7 +62,6 @@ class _ChatRoomItemState extends State<ChatRoomItem> {
   }
 
   Widget _getChatTitle(ChannelSubscription sender) {
-//  Widget _getChatTitle(Channel sender) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -53,7 +53,7 @@ class _ddpPassword {
 abstract class _ClientUsersMixin implements _DdpClientWrapper {
   Future<User> login(UserCredentials credentials) {
     dynamic request;
-    if (credentials.token != null && credentials != '') {
+    if (credentials.token != null) {
       request = _ddpTokenLoginRequest()..token = credentials.token;
     } else {
       final digest = sha256.convert(utf8.encode(credentials.password));

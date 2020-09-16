@@ -17,13 +17,11 @@ class _ChatRoomsState extends State<ChatRooms> {
   Client client;
   ClientReal clientReal;
   String roomId;
-
   List<ChannelSubscription> list = new List();
 
   @override
   void initState() {
     super.initState();
-
     client = new Client(
         Uri(scheme: "http", host: "rocketdev.itgsolutions.com"), false);
 
@@ -38,9 +36,7 @@ class _ChatRoomsState extends State<ChatRooms> {
     //  initializingclientReal();
     return Scaffold(
         body: FutureBuilder<List<ChannelSubscription>>(
-//        body: FutureBuilder<List<Channel>>(
             future: client.getSubscriptions(),
-            // future: client.getRooms(),
             builder: (context, snapshot) {
               return snapshot.hasData
                   ? ListView.builder(
@@ -48,9 +44,7 @@ class _ChatRoomsState extends State<ChatRooms> {
                       itemBuilder: (_, int position) {
                         final item = snapshot.data[position];
                         roomId = item != null ? item.roomId : "";
-                        return item != null &&
-                                //  item.name != null &&
-                                !item.name.contains("call")
+                        return item != null && !item.name.contains("call")
                             ? ChatRoomItem(
                                 leading: ChatRoomCircleAvatar(
                                   imageUrl: "",
@@ -76,10 +70,12 @@ class _ChatRoomsState extends State<ChatRooms> {
 
   initializingclientReal() async {}
 
+
 //  navigateToChat(String id, Channel item) {
   navigateToChat(String id) async {
     clientReal =
         await RoomRealTimeRepo.startRoomChat(id, 'pa0707', 'Ab@123456');
+
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => ChatRoom(id, client, clientReal)),
