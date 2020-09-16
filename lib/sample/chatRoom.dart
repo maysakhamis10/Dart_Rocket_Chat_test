@@ -52,10 +52,7 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
             var messageData = list[0];
             var mm = Message.fromJson(messageData);
             print("messsss ${mm.msg}");
-//            Map map = messageData[2];
-//            message.msg = map["msg"];
             messagesModel.add(mm);
-//            messagesModel.addAll(valuesList);
             print(message.msg);
           }
         }

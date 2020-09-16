@@ -10,7 +10,6 @@ import 'package:jitsi/ui/chat_room/TakeAPicutre.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:camera/camera.dart';
 
-
 import '../../Singletoon.dart';
 
 import 'CustomIconButton.dart';
@@ -162,7 +161,7 @@ class CustomMessageInputState extends State<CustomMessageInput> {
 
   showFilePicker(FileType fileType) async {
     File file = await FilePicker.getFile(type: fileType);
-//    chatBloc.dispatch(SendAttachmentEvent(chat.chatId,file,fileType));
+    print("file path=====>>>> ${file.path}");
     Navigator.pop(context);
 //    GradientSnackBar.showMessage(context, 'Sending attachment..');
   }
