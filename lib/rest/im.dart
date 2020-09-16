@@ -11,6 +11,7 @@ abstract class _ClientIMMixin implements _ClientWrapper {
   }) {
     Completer<List<Message>> completer = Completer();
     StringBuffer query = StringBuffer('roomId=$roomId');
+    print("room_id = " + roomId);
     if (latest != null) {
       query.write('&latest=${latest.toUtc().toIso8601String()}');
     }
@@ -74,6 +75,4 @@ abstract class _ClientIMMixin implements _ClientWrapper {
     }).catchError((error) => completer.completeError(error));
     return completer.future;
   }
-
-  
 }

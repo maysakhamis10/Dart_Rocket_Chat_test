@@ -28,14 +28,14 @@ class _ChatRoomsState extends State<ChatRooms> {
         Uri(scheme: "http", host: "rocketdev.itgsolutions.com"), false);
 
     UserCredentials userCredentials = new UserCredentials(
-        id: "b5xdRX58zNb2DmqzA",
-        token: "FNaYYP9MKOgdTXuUpwK3f3f-dLfpxaitlAvSnBLj72c");
+        id: "g5LLpo3ba2EPPekBF",
+        token: "N4znKscFWouwYYi9EaDWh8M4axbcqJ8ZSDBx99175de");
     client.setCredentials(userCredentials);
   }
 
   @override
   Widget build(BuildContext context) {
-    initializingclientReal();
+    //  initializingclientReal();
     return Scaffold(
         body: FutureBuilder<List<ChannelSubscription>>(
 //        body: FutureBuilder<List<Channel>>(
@@ -74,13 +74,12 @@ class _ChatRoomsState extends State<ChatRooms> {
             }));
   }
 
-  initializingclientReal() async {
-    clientReal =
-        await RoomRealTimeRepo.startRoomChat(roomId, 'pa0707', 'Ab@123456');
-  }
+  initializingclientReal() async {}
 
 //  navigateToChat(String id, Channel item) {
-  navigateToChat(String id) {
+  navigateToChat(String id) async {
+    clientReal =
+        await RoomRealTimeRepo.startRoomChat(id, 'pa0707', 'Ab@123456');
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => ChatRoom(id, client, clientReal)),

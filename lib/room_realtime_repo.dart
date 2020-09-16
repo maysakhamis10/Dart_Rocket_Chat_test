@@ -31,13 +31,15 @@ class RoomRealTimeRepo extends BaseRepo {
     client.addStatusListener((status) async {
       if (status == ConnectStatus.connected) {
         User user = await client.login(new UserCredentials(
-            id: "b5xdRX58zNb2DmqzA",
-            token: "FNaYYP9MKOgdTXuUpwK3f3f-dLfpxaitlAvSnBLj72c"));
+            id: "g5LLpo3ba2EPPekBF",
+            token: "N4znKscFWouwYYi9EaDWh8M4axbcqJ8ZSDBx99175de"));
         List<Channel> channels = await client.getChannelsIn();
         channels.forEach((channel) {
           if (channel.id == roomId) {
             // client.joinChannel(roomId);
-            client.subRoomMessages(channel.id);
+            client.subRoomMessages(channel.id).then((onValue) {
+              print("onValue ====>>${onValue}");
+            });
           }
         });
 //        print('response room.. $status');

@@ -3,14 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:jitsi/resourses/AppColors.dart';
 import 'package:jitsi/resourses/Images.dart';
 
+import '../../Singletoon.dart';
 import 'CustomIconButton.dart';
 
 class CustomMessageInput extends StatefulWidget {
   Function sendMessage;
   double iconSize;
   Color iconColor;
+  String roomId;
+  String id;
+  String token;
 
-  CustomMessageInput({@required this.sendMessage});
+  CustomMessageInput(
+      {@required this.sendMessage, this.roomId, this.id, this.token});
 
   @override
   State<StatefulWidget> createState() {
