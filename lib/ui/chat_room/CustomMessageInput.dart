@@ -5,17 +5,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jitsi/resourses/AppColors.dart';
 import 'package:jitsi/resourses/Images.dart';
+
 import 'package:jitsi/ui/chat_room/TakeAPicutre.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:camera/camera.dart';
+
+
+import '../../Singletoon.dart';
+
 import 'CustomIconButton.dart';
 
 class CustomMessageInput extends StatefulWidget {
   Function sendMessage;
   double iconSize;
   Color iconColor;
+  String roomId;
+  String id;
+  String token;
 
-  CustomMessageInput({@required this.sendMessage});
+  CustomMessageInput(
+      {@required this.sendMessage, this.roomId, this.id, this.token});
 
   @override
   State<StatefulWidget> createState() {

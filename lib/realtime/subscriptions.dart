@@ -20,10 +20,11 @@ abstract class _ClientSubscriptionsMixin implements _DdpClientWrapper {
 
   Future<void> unSubRoomMessages(String subId) {
     Completer<void> completer = Completer();
-    this._getDdpClient()
-      .unSub(subId)
-      .then((call) => completer.complete(call))
-      .catchError((error) => completer.completeError(error));
+    this
+        ._getDdpClient()
+        .unSub(subId)
+        .then((call) => completer.complete(call))
+        .catchError((error) => completer.completeError(error));
     return completer.future;
   }
 
@@ -39,11 +40,12 @@ abstract class _ClientSubscriptionsMixin implements _DdpClientWrapper {
 
   Stream<UpdateEvent> roomMessages() {
     StreamController<UpdateEvent> controller = StreamController();
-    this._getDdpClient()
+    this
+        ._getDdpClient()
         .collectionByName('stream-room-messages')
         .addUpdateListener((String collection, String operation, String id,
             Map<String, dynamic> doc) {
-          print(collection + " "+operation+"     "+id+" ");
+      print("valuuuu=====" + collection + " " + operation + "     " + id + " ");
       controller.add(UpdateEvent()
         ..collection = collection
         ..operation = operation
@@ -59,7 +61,7 @@ abstract class _ClientSubscriptionsMixin implements _DdpClientWrapper {
         ._getDdpClient()
         .collectionByName('stream-notify-user')
         .addUpdateListener((collection, operation, id, doc) {
-      print(collection + " "+operation+"     "+id+" ");
+      print(collection + " " + operation + "     " + id + " ");
       if (doc['eventName'].endsWith('rooms-changed')) {
         print(doc['args']);
         controller.add(Channel.fromJson(doc['args'][1]));

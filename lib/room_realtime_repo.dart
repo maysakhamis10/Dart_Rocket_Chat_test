@@ -31,7 +31,9 @@ class RoomRealTimeRepo extends BaseRepo {
         channels.forEach((channel) {
           if (channel.id == roomId) {
             // client.joinChannel(roomId);
-            client.subRoomMessages(channel.id);
+            client.subRoomMessages(channel.id).then((onValue) {
+              print("onValue ====>>${onValue}");
+            });
           }
         });
       }

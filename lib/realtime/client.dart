@@ -72,7 +72,6 @@ class ClientReal extends Object
     this._getDdpClient().addStatusListener(listener);
     print(this._getDdpClient().stats());
   }
-
 }
 
 final Random _random = Random(DateTime.now().millisecondsSinceEpoch);
