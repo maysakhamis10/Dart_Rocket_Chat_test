@@ -38,6 +38,37 @@ abstract class _ClientMessagesMixin implements _DdpClientWrapper {
     return completer.future;
   }
 
+  Future<void> Upload({File file, String roomId, String id, String token}) async {
+    var request = http.MultipartRequest(
+        "POST",
+        Uri.parse(
+            "http://rocketdev.itgsolutions.com/api/v1/rooms.upload/$roomId"));
+
+    Map<String, String> header = {
+      'Content-type': '*/*',
+    };
+
+    header['X-Auth-Token'] = token;
+    header['X-User-Id'] = id;
+
+    request.headers.addAll(header);
+
+    var pic = await http.MultipartFile.fromPath(
+      "file",
+      file.path,
+    );
+
+    request.files.add(pic);
+    var response = await request.send();
+//    print('ress .. ${response.stream.listen((value) {
+//      print('valuess ==>> $value');
+//    })}');
+//
+    response.stream/*transform(utf8.decoder)*/.listen((value) {
+      print("upload response====>>$value");
+    });
+  }
+
   Future<void> editMessage(Message message) {
     Completer<void> completer = Completer();
     this

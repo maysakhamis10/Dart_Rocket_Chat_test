@@ -73,15 +73,7 @@ class TakePictureScreenState extends State<TakeAPicture> {
                         setState(() {
                           imagePath = path;
                         });
-                        /*Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          DisplayPictureScreen(imagePath: path),
-                    ),
-                  );*/
                       } catch (e) {
-                        // If an error occurs, log the error to the console.
                         print(e);
                       }
                     },
@@ -110,7 +102,6 @@ class TakePictureScreenState extends State<TakeAPicture> {
   }
 }
 
-// A widget that displays the picture taken by the user.
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
   Function closeCamera, sendImage;
@@ -135,7 +126,6 @@ class DisplayPictureScreen extends StatelessWidget {
           GestureDetector(
             onTap: () {
               closeCamera();
-//                  Navigator.pop(context);
             },
             child: Container(
               margin: EdgeInsets.all(24.0),
@@ -146,7 +136,6 @@ class DisplayPictureScreen extends StatelessWidget {
                 size: 45,
               ),
               decoration: BoxDecoration(
-//                shape: BoxShape.circle,
                   border:
                       Border.all(color: Colors.red, style: BorderStyle.solid),
                   borderRadius: BorderRadius.circular(100.0)),
@@ -155,10 +144,6 @@ class DisplayPictureScreen extends StatelessWidget {
           GestureDetector(
             onTap: () {
               sendImage();
-              /* Navigator.pushReplacement(
-                      context, MaterialPageRoute(builder: (context) {
-                    return ChatRoom()
-                  }));*/
             },
             child: Container(
               margin: EdgeInsets.all(24.0),
@@ -169,7 +154,6 @@ class DisplayPictureScreen extends StatelessWidget {
                 size: 45,
               ),
               decoration: BoxDecoration(
-//                shape: BoxShape.circle,
                   border:
                       Border.all(color: Colors.green, style: BorderStyle.solid),
                   borderRadius: BorderRadius.circular(100.0)),

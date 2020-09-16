@@ -2,11 +2,13 @@ library realtime;
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:ddp/ddp.dart' as ddp;
 import 'package:jitsi/models/models.dart';
+import 'package:http/http.dart' as http;
 
 part 'channels.dart';
 part 'emoji.dart';

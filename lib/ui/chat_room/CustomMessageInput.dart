@@ -1,21 +1,16 @@
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jitsi/resourses/AppColors.dart';
 import 'package:jitsi/resourses/Images.dart';
-
 import 'package:jitsi/ui/chat_room/TakeAPicutre.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:camera/camera.dart';
-
-import '../../Singletoon.dart';
-
 import 'CustomIconButton.dart';
 
 class CustomMessageInput extends StatefulWidget {
-  Function sendMessage;
+  Function sendMessage, uploadFile;
   double iconSize;
   Color iconColor;
   String roomId;
@@ -23,7 +18,11 @@ class CustomMessageInput extends StatefulWidget {
   String token;
 
   CustomMessageInput(
-      {@required this.sendMessage, this.roomId, this.id, this.token});
+      {@required this.sendMessage,
+      this.uploadFile,
+      this.roomId,
+      this.id,
+      this.token});
 
   @override
   State<StatefulWidget> createState() {
@@ -58,6 +57,7 @@ class CustomMessageInputState extends State<CustomMessageInput> {
                   );
                 }));
                 print("image path=====>> $imagePath");
+                widget.uploadFile(imagePath);
               },
             ),
           ),
@@ -67,7 +67,6 @@ class CustomMessageInputState extends State<CustomMessageInput> {
               iconSize: 35,
               iconAsset: ATTACHMENT_MESSAGE,
               iconColor: BLUE_WHITE,
-//              permission: Permission.storage,
               onPressed: () {
                 showAttachmentBottomSheet(context);
               },
