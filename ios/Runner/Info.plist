@@ -25,6 +25,17 @@
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
+	<key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key><true/>
+    </dict>
+	<key>NSMicrophoneUsageDescription</key>
+    <string>${PRODUCT_NAME} always microphone use</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>${PRODUCT_NAME} PhotoLibrary Usage</string>
+    <key>NSCameraUsageDescription</key>
+    <string>${PRODUCT_NAME} always camera use</string>
+
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

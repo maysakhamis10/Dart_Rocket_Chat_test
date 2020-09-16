@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:jitsi/sample/RoomsPage.dart';
-import 'package:jitsi/ui/rooms_list/ChatRoomItem.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override

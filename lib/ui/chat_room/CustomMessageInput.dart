@@ -1,8 +1,13 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jitsi/resourses/AppColors.dart';
 import 'package:jitsi/resourses/Images.dart';
-
+import 'package:jitsi/ui/chat_room/TakeAPicutre.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:camera/camera.dart';
 import 'CustomIconButton.dart';
 
 class CustomMessageInput extends StatefulWidget {
@@ -35,7 +40,16 @@ class CustomMessageInputState extends State<CustomMessageInput> {
               iconSize: 35,
               iconAsset: CAMERA_MESSAGE,
               iconColor: BLUE_WHITE,
-              onPressed: () {},
+              permission: Permission.camera,
+              onPressed: () async {
+                var firstCamera = await getCamera();
+                String imagePath = await Navigator.push(context,
+                    MaterialPageRoute(builder: (context) {
+                  return TakeAPicture(
+                    camera: firstCamera,
+                  );
+                }));
+              },
             ),
           ),
           Visibility(
@@ -44,7 +58,10 @@ class CustomMessageInputState extends State<CustomMessageInput> {
               iconSize: 35,
               iconAsset: ATTACHMENT_MESSAGE,
               iconColor: BLUE_WHITE,
-              onPressed: () {},
+//              permission: Permission.storage,
+              onPressed: () {
+                showAttachmentBottomSheet(context);
+              },
             ),
           ),
           _getTextField(),
@@ -68,7 +85,7 @@ class CustomMessageInputState extends State<CustomMessageInput> {
               iconSize: 35,
               iconAsset: MIC_MESSAGE,
               iconColor: BLUE_WHITE,
-              onPressed: () {},
+//              permission: Permission.microphone,
             ),
           ),
         ],
@@ -95,5 +112,48 @@ class CustomMessageInputState extends State<CustomMessageInput> {
         ),
       ),
     );
+  }
+
+  Future<CameraDescription> getCamera() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    // Obtain a list of the available cameras on the device.
+    final cameras = await availableCameras();
+    // Get a specific camera from the list of available cameras.
+    final firstCamera = cameras.first;
+
+    return firstCamera;
+  }
+
+  showAttachmentBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                    leading: Icon(Icons.image),
+                    title: Text('Image'),
+                    onTap: () => showFilePicker(FileType.image)),
+                ListTile(
+                    leading: Icon(Icons.videocam),
+                    title: Text('Video'),
+                    onTap: () => showFilePicker(FileType.video)),
+                ListTile(
+                  leading: Icon(Icons.insert_drive_file),
+                  title: Text('File'),
+                  onTap: () => showFilePicker(FileType.any),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  showFilePicker(FileType fileType) async {
+    File file = await FilePicker.getFile(type: fileType);
+//    chatBloc.dispatch(SendAttachmentEvent(chat.chatId,file,fileType));
+    Navigator.pop(context);
+//    GradientSnackBar.showMessage(context, 'Sending attachment..');
   }
 }

@@ -17,19 +17,17 @@ class _ChatRoomsState extends State<ChatRooms> {
   Client client;
   ClientReal clientReal;
   String roomId;
-
   List<ChannelSubscription> list = new List();
 
   @override
   void initState() {
     super.initState();
-
     client = new Client(
         Uri(scheme: "http", host: "rocketdev.itgsolutions.com"), false);
 
     UserCredentials userCredentials = new UserCredentials(
-        id: "b5xdRX58zNb2DmqzA",
-        token: "FNaYYP9MKOgdTXuUpwK3f3f-dLfpxaitlAvSnBLj72c");
+        id: "g5LLpo3ba2EPPekBF",
+        token: "N4znKscFWouwYYi9EaDWh8M4axbcqJ8ZSDBx99175de");
     client.setCredentials(userCredentials);
   }
 
@@ -38,9 +36,7 @@ class _ChatRoomsState extends State<ChatRooms> {
     initializingclientReal();
     return Scaffold(
         body: FutureBuilder<List<ChannelSubscription>>(
-//        body: FutureBuilder<List<Channel>>(
             future: client.getSubscriptions(),
-            // future: client.getRooms(),
             builder: (context, snapshot) {
               return snapshot.hasData
                   ? ListView.builder(
@@ -48,9 +44,7 @@ class _ChatRoomsState extends State<ChatRooms> {
                       itemBuilder: (_, int position) {
                         final item = snapshot.data[position];
                         roomId = item != null ? item.roomId : "";
-                        return item != null &&
-                                //  item.name != null &&
-                                !item.name.contains("call")
+                        return item != null && !item.name.contains("call")
                             ? ChatRoomItem(
                                 leading: ChatRoomCircleAvatar(
                                   imageUrl: "",
@@ -79,7 +73,6 @@ class _ChatRoomsState extends State<ChatRooms> {
         await RoomRealTimeRepo.startRoomChat(roomId, 'pa0707', 'Ab@123456');
   }
 
-//  navigateToChat(String id, Channel item) {
   navigateToChat(String id) {
     Navigator.push(
       context,
