@@ -26,8 +26,6 @@ class ChatRoom extends StatefulWidget {
 }
 
 class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
-  var childList = <Widget>[];
-
   MessagesModel messagesModel = MessagesModel();
   ScrollController _scrollController;
   StreamController<bool> streamController = StreamController<bool>();
@@ -36,9 +34,6 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
   Future<ChannelSubscription> messages;
 
   ClientReal clientReal;
- 
-  List<Message> messages;
-
 
   @override
   void initState() {
@@ -46,20 +41,25 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
     _scrollController = new ScrollController();
     WidgetsBinding.instance.addObserver(this);
     clientReal = widget.clientReal;
-    messages = getMessages();
+
     clientReal.roomMessages().listen((data) {
       if (data.doc != null && data.doc.values != null) {
         var valuesList = data.doc.values.toList();
         Message message = new Message();
-        Map map = valuesList[2];
-        message.msg = map["value"];
-        messages.add(message);
+        if (valuesList.length >= 2) {
+          var list = valuesList[1];
+          if (list.isNotEmpty && list.length >= 1) {
+            var messageData = list[0];
+            var mm = Message.fromJson(messageData);
+            print("messsss ${mm.msg}");
+//            Map map = messageData[2];
+//            message.msg = map["msg"];
+            messagesModel.add(mm);
+//            messagesModel.addAll(valuesList);
+            print(message.msg);
+          }
+        }
         print("new Value ====>>${valuesList.length}");
-
-        messagesModel.addAll(valuesList);
-
-        print(message.msg);
-
       }
     });
     streamController.stream.listen((event) {
@@ -97,58 +97,58 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Flexible(
-
-                  fit: FlexFit.tight,
-                  child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: FutureBuilder<List<Message>>(
-                          future: widget.client.loadIMHistory(widget.roomId),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData && snapshot.data != null) {
-                              if (snapshot.data.length == 0) {
+                    fit: FlexFit.tight,
+                    child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: FutureBuilder<List<Message>>(
+                            future: widget.client.loadIMHistory(widget.roomId),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData && snapshot.data != null) {
+                                if (snapshot.data.length == 0) {
+                                  return Center(
+                                    child: Text(
+                                      "Start messaging...",
+                                      style: MESSAGE_TEXT_STYLE,
+                                    ),
+                                  );
+                                } else {
+                                  messagesModel.removeAll();
+                                  List newList =
+                                      snapshot.data.reversed.toList();
+                                  messagesModel.addAll(newList);
+                                  messagesModel.addListener(() {
+                                    streamControllerForMessages
+                                        .add(messagesModel.messagesList);
+                                    streamController.add(true);
+                                  });
+                                  return StreamBuilder<List<Message>>(
+                                    stream: streamControllerForMessages.stream,
+                                    initialData: newList,
+                                    builder: (context, responseList) {
+                                      return ListView.builder(
+                                          controller: _scrollController,
+                                          itemCount: responseList.data.length,
+                                          itemBuilder: (_, int position) {
+                                            final item =
+                                                responseList.data[position];
+                                            streamController.add(true);
+                                            return MessageItem(
+                                              message: item.msg,
+                                              time: item.timestamp,
+                                              messageType:
+                                                  widget.client.getId() ==
+                                                          item.user.id
+                                                      ? MessageType.sent
+                                                      : MessageType.received,
+                                            );
+                                          });
+                                    },
+                                  );
+                                }
+                              } else
                                 return Center(
-                                  child: Text(
-                                    "Start messaging...",
-                                    style: MESSAGE_TEXT_STYLE,
-                                  ),
+                                  child: CircularProgressIndicator(),
                                 );
-                              } else {
-                                messagesModel.removeAll();
-                                List newList = snapshot.data.reversed.toList();
-                                messagesModel.addAll(newList);
-                                messagesModel.addListener(() {
-                                  streamControllerForMessages
-                                      .add(messagesModel.messagesList);
-                                });
-                                return StreamBuilder<List<Message>>(
-                                  stream: streamControllerForMessages.stream,
-                                  initialData: newList,
-                                  builder: (context, responseList) {
-                                    return ListView.builder(
-                                        controller: _scrollController,
-                                        itemCount: newList.length,
-                                        itemBuilder: (_, int position) {
-                                          final item =
-                                          newList[position];
-                                          streamController.add(true);
-                                          return MessageItem(
-                                            message: item.msg,
-                                            time: item.timestamp,
-                                            messageType:
-                                                widget.client.getId() ==
-                                                        item.user.id
-                                                    ? MessageType.sent
-                                                    : MessageType.received,
-                                          );
-                                        });
-                                  },
-                                );
-                              }
-                            } else
-                              return Center(
-                                child: CircularProgressIndicator(),
-
-                              );
                             }))),
                 Divider(height: 0, color: Colors.black26),
                 Container(
@@ -164,11 +164,10 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
         ])));
   }
 
-
   void sendMessage(String text) async {
     Message newMessageSent =
         await widget.clientReal.sendMessage(widget.roomId, text);
-    messagesModel.add(newMessageSent);
+    // messagesModel.add(newMessageSent);
   }
 
   void didUpdateWidget(ChatRoom oldWidget) {
@@ -219,9 +218,5 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
     streamController.close();
     streamControllerForMessages.close();
     super.dispose();
-  }
-
-  getMessages() async {
-    return await widget.client.loadIMHistory(widget.roomId);
   }
 }
