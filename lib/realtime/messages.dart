@@ -38,25 +38,26 @@ abstract class _ClientMessagesMixin implements _DdpClientWrapper {
     return completer.future;
   }
 
-  Future<void> Upload({File file, String roomId, String id, String token}) async {
+  Future<void> Upload(
+      {File file, String roomId, String id, String token}) async {
     var request = http.MultipartRequest(
         "POST",
         Uri.parse(
-            "http://rocketdev.itgsolutions.com/api/v1/rooms.upload/$roomId"));
+            "https://rocketdev.itgsolutions.com/api/v1/rooms.upload/$roomId"));
 
     Map<String, String> header = {
-      'Content-type': '*/*',
+      'Content-type': 'multipart/form-data',
     };
 
     header['X-Auth-Token'] = token;
     header['X-User-Id'] = id;
 
     request.headers.addAll(header);
-
-    var pic = await http.MultipartFile.fromPath(
-      "file",
-      file.path,
-    );
+    request.fields["file"] = file.path;
+    request.fields["msg"] = "hello";
+    var pic = await http.MultipartFile.fromBytes(
+        "file", await File.fromUri(file.uri).readAsBytes(),
+        contentType: MediaType('image', 'png'));
 
     request.files.add(pic);
     var response = await request.send();
@@ -64,9 +65,9 @@ abstract class _ClientMessagesMixin implements _DdpClientWrapper {
 //      print('valuess ==>> $value');
 //    })}');
 //
-    response.stream/*transform(utf8.decoder)*/.listen((value) {
-      print("upload response====>>$value");
-    });
+//    response.stream.transform(utf8.decoder).listen((value) {
+//      print("upload response====>>$value");
+//    });
   }
 
   Future<void> editMessage(Message message) {

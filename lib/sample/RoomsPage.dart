@@ -27,7 +27,7 @@ class _ChatRoomsState extends State<ChatRooms> {
 
     UserCredentials userCredentials = new UserCredentials(
         id: "g5LLpo3ba2EPPekBF",
-        token: "N4znKscFWouwYYi9EaDWh8M4axbcqJ8ZSDBx99175de");
+        token: "Ra70SCY4FMh5SEHpvMYmBALZm0W8KF6pkGqKc9PEE4g");
     client.setCredentials(userCredentials);
   }
 
@@ -69,7 +69,6 @@ class _ChatRoomsState extends State<ChatRooms> {
   }
 
   initializingclientReal() async {}
-
 
 //  navigateToChat(String id, Channel item) {
   navigateToChat(String id) async {

@@ -192,9 +192,10 @@ abstract class _ClientChannelsMixin implements _ClientWrapper {
       'Content-Type': 'application/json',
     };
     final body = json.encode(<String, dynamic>{'roomId': roomId});
-    http.post('${_getUrl()}/channelsClose', headers: headers, body: body)
-      .then((response) => completer.complete(null))
-      .catchError((error) => completer.completeError(error));
+    http
+        .post('${_getUrl()}/channelsClose', headers: headers, body: body)
+        .then((response) => completer.complete(null))
+        .catchError((error) => completer.completeError(error));
     return completer.future;
   }
 

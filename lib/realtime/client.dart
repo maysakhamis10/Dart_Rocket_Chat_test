@@ -9,6 +9,7 @@ import 'package:crypto/crypto.dart';
 import 'package:ddp/ddp.dart' as ddp;
 import 'package:jitsi/models/models.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 part 'channels.dart';
 part 'emoji.dart';
