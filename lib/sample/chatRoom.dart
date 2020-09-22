@@ -134,12 +134,6 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
                                             return MessageItem(
                                               message: item.msg,
                                               time: item.timestamp,
-//                                              userImageUrl: getUserImage(),
-                                              messageAttachments:
-                                                  getAttachmentType(
-                                                      item.attachments),
-                                              attachmentUrl:
-                                                  "https://rocketdev.itgsolutions.com/${getAttachmentUrl(item.attachments)}?rc_uid=${widget.client.getId()}&rc_token=${widget.client.getToken()}",
                                               messageType:
                                                   widget.client.getId() ==
                                                           item.user.id
@@ -161,18 +155,9 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
                   height: 50,
                   child: Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: StreamBuilder<bool>(
-                        stream: streamControllerForRecording.stream,
-                        initialData: false,
-                        builder: (context, snap) {
-                          return CustomMessageInput(
-                            sendMessage: sendMessage,
-                            uploadFile: uploadFile,
-                            startRecord: start,
-                            isRecording: snap.data,
-                            stopRecording: stop,
-                          );
-                        },
+                      child: CustomMessageInput(
+                        sendMessage: sendMessage,
+                        uploadFile: uploadFile,
                       )),
                 ),
               ])
@@ -184,6 +169,50 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
         await widget.clientReal.sendMessage(widget.roomId, text);
   }
 
+  void uploadFile(String path) async {
+    await widget.clientReal.Upload(
+        file: File(path),
+        roomId: widget.roomId,
+        token: widget.client.getToken(),
+        id: widget.client.getId());
+  }
+
+  void didUpdateWidget(ChatRoom oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('state = $state');
+  }
+
+                                            );
+                                          });
+                                    },
+                                  );
+                                }
+                              } else
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                            }))),
+                Divider(height: 0, color: Colors.black26),
+                Container(
+                  color: Colors.white,
+                  height: 50,
+                  child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: CustomMessageInput(
+                        sendMessage: sendMessage,
+                        uploadFile: uploadFile,
+                      )),
+                ),
+              ])
+        ])));
   Recording _recording = new Recording();
 
 //  bool _isRecording = false;
@@ -224,27 +253,13 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
 //    _controller.text = recording.path;
   }
 
-  void uploadFile(String path) async {
+//  void uploadFile(String path) async {
 //    await widget.clientReal.Upload(
-//        file: new File(path),
+//        file: File(path),
 //        roomId: widget.roomId,
 //        token: widget.client.getToken(),
 //        id: widget.client.getId());
-  }
-
-  void didUpdateWidget(ChatRoom oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
-    });
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('state = $state');
-  }
-
+//  }
   @override
   void dispose() {
     streamController.close();
