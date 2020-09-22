@@ -10,18 +10,22 @@ import 'package:camera/camera.dart';
 import 'CustomIconButton.dart';
 
 class CustomMessageInput extends StatefulWidget {
-  Function sendMessage, uploadFile;
+  Function sendMessage, uploadFile, startRecord, stopRecording;
   double iconSize;
   Color iconColor;
   String roomId;
   String id;
   String token;
+  bool isRecording;
 
   CustomMessageInput(
       {@required this.sendMessage,
       this.uploadFile,
       this.roomId,
       this.id,
+      this.startRecord,
+      this.stopRecording,
+      this.isRecording,
       this.token});
 
   @override
@@ -88,12 +92,26 @@ class CustomMessageInputState extends State<CustomMessageInput> {
             },
           ),
           Visibility(
-            visible: true,
+            visible: !widget.isRecording,
             child: CustomIconButton(
               iconSize: 35,
               iconAsset: MIC_MESSAGE,
               iconColor: BLUE_WHITE,
-//              permission: Permission.microphone,
+              permission: Permission.microphone,
+              onPressed: () {
+                widget.startRecord();
+              },
+            ),
+          ),
+          Visibility(
+            visible: widget.isRecording,
+            child: CustomIconButton(
+              iconSize: 35, icon: Icon(Icons.pause),
+//              iconAsset: MIC_MESSAGE,
+              iconColor: BLUE_WHITE,
+              onPressed: () {
+                widget.stopRecording();
+              },
             ),
           ),
         ],
@@ -162,6 +180,6 @@ class CustomMessageInputState extends State<CustomMessageInput> {
     File file = await FilePicker.getFile(type: fileType);
     print("file path=====>>>> ${file.path}");
     Navigator.pop(context);
-//    GradientSnackBar.showMessage(context, 'Sending attachment..');
+    widget.uploadFile(file.path);
   }
 }

@@ -33,6 +33,8 @@ dependencies:
   intl: ^0.16.1
   dio: ^3.0.9
   file_picker: ^1.4.0+1
+  audio_recorder: ^1.0.2
+  path_provider: ^1.1.0
 
 
 dev_dependencies:

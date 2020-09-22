@@ -54,20 +54,33 @@ abstract class _ClientMessagesMixin implements _DdpClientWrapper {
 
     request.headers.addAll(header);
     request.fields["file"] = file.path;
-    request.fields["msg"] = "hello";
+    request.fields["msg"] = "hello hello hello";
     var pic = await http.MultipartFile.fromBytes(
         "file", await File.fromUri(file.uri).readAsBytes(),
         contentType: MediaType('image', 'png'));
 
     request.files.add(pic);
     var response = await request.send();
-//    print('ress .. ${response.stream.listen((value) {
-//      print('valuess ==>> $value');
-//    })}');
-//
-//    response.stream.transform(utf8.decoder).listen((value) {
-//      print("upload response====>>$value");
-//    });
+    print('ress .. ${response.stream.listen((value) {
+      print('valuess ==>> $value');
+    })}');
+
+    response.stream.transform(utf8.decoder).listen((value) {
+      print("upload response====>>$value");
+    });
+  }
+
+  Future<String> getAvatar(String id) async {
+    String result = "";
+    var request = http.MultipartRequest(
+        "GET",
+        Uri.parse(
+            "https://rocketdev.itgsolutions.com/api/v1/users.getAvatar?userId=$id"));
+    var response = await request.send();
+    print('ress .. ${response.stream.listen((value) {
+      print('valuess ==>> $value');
+//      result = value!=null?value.length;
+    })}');
   }
 
   Future<void> editMessage(Message message) {

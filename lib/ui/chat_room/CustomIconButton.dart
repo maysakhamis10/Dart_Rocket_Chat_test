@@ -55,23 +55,6 @@ class CustomIconButtonState extends State<CustomIconButton> {
     setState(() => _permissionStatus = status);
   }
 
-  Color getPermissionColor() {
-    switch (_permissionStatus) {
-      case PermissionStatus.denied:
-        return Colors.red;
-      case PermissionStatus.granted:
-        return Colors.green;
-      default:
-        return Colors.grey;
-    }
-  }
-
-  void checkServiceStatus(BuildContext context, Permission permission) async {
-    Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text((await permission.status).toString()),
-    ));
-  }
-
   Future<void> requestPermission(Permission permission) async {
     final status = await permission.request();
     setState(() {
