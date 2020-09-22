@@ -27,7 +27,7 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
   ScrollController _scrollController;
   StreamController<bool> streamController = StreamController<bool>();
   StreamController<List<Message>> streamControllerForMessages =
-  StreamController<List<Message>>();
+      StreamController<List<Message>>();
   Future<ChannelSubscription> messages;
 
   ClientReal clientReal;
@@ -87,92 +87,86 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
                 })),
         body: Container(
             child: Stack(fit: StackFit.loose, children: <Widget>[
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Flexible(
-                        fit: FlexFit.tight,
-                        child: Container(
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width,
-                            child: FutureBuilder<List<Message>>(
-                                future: widget.client.loadIMHistory(
-                                    widget.roomId),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData &&
-                                      snapshot.data != null) {
-                                    if (snapshot.data.length == 0) {
-                                      return Center(
-                                        child: Text(
-                                          "Start messaging...",
-                                          style: MESSAGE_TEXT_STYLE,
-                                        ),
-                                      );
-                                    } else {
-                                      messagesModel.removeAll();
-                                      List newList =
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Flexible(
+                    fit: FlexFit.tight,
+                    child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: FutureBuilder<List<Message>>(
+                            future: widget.client.loadIMHistory(widget.roomId),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData && snapshot.data != null) {
+                                if (snapshot.data.length == 0) {
+                                  return Center(
+                                    child: Text(
+                                      "Start messaging...",
+                                      style: MESSAGE_TEXT_STYLE,
+                                    ),
+                                  );
+                                } else {
+                                  messagesModel.removeAll();
+                                  List newList =
                                       snapshot.data.reversed.toList();
-                                      messagesModel.addAll(newList);
-                                      messagesModel.addListener(() {
-                                        streamControllerForMessages
-                                            .add(messagesModel.messagesList);
-                                        streamController.add(true);
-                                      });
-                                      return StreamBuilder<List<Message>>(
-                                        stream: streamControllerForMessages
-                                            .stream,
-                                        initialData: newList,
-                                        builder: (context, responseList) {
-                                          return ListView.builder(
-                                              controller: _scrollController,
-                                              itemCount: responseList.data
-                                                  .length,
-                                              itemBuilder: (_, int position) {
-                                                final item =
+                                  messagesModel.addAll(newList);
+                                  messagesModel.addListener(() {
+                                    streamControllerForMessages
+                                        .add(messagesModel.messagesList);
+                                    streamController.add(true);
+                                  });
+                                  return StreamBuilder<List<Message>>(
+                                    stream: streamControllerForMessages.stream,
+                                    initialData: newList,
+                                    builder: (context, responseList) {
+                                      return ListView.builder(
+                                          controller: _scrollController,
+                                          itemCount: responseList.data.length,
+                                          itemBuilder: (_, int position) {
+                                            final item =
                                                 responseList.data[position];
-                                                streamController.add(true);
-                                                return MessageItem(
-                                                  message: item.msg,
-                                                  time: item.timestamp,
-                                                  messageType:
+                                            streamController.add(true);
+                                            return MessageItem(
+                                              message: item.msg,
+                                              time: item.timestamp,
+                                              messageType:
                                                   widget.client.getId() ==
-                                                      item.user.id
+                                                          item.user.id
                                                       ? MessageType.sent
                                                       : MessageType.received,
-                                                );
-                                              });
-                                        },
-                                      );
-                                    }
-                                  } else
-                                    return Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                }))),
-                    Divider(height: 0, color: Colors.black26),
-                    Container(
-                      color: Colors.white,
-                      height: 50,
-                      child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: CustomMessageInput(
-                            sendMessage: sendMessage,
-                            uploadFile:uploadFile,
-                          )),
-                    ),
-                  ])
-            ])));
+                                            );
+                                          });
+                                    },
+                                  );
+                                }
+                              } else
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                            }))),
+                Divider(height: 0, color: Colors.black26),
+                Container(
+                  color: Colors.white,
+                  height: 50,
+                  child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: CustomMessageInput(
+                        sendMessage: sendMessage,
+                        uploadFile: uploadFile,
+                      )),
+                ),
+              ])
+        ])));
   }
 
   void sendMessage(String text) async {
     Message newMessageSent =
-    await widget.clientReal.sendMessage(widget.roomId, text);
+        await widget.clientReal.sendMessage(widget.roomId, text);
   }
 
   void uploadFile(String path) async {
-    await widget.clientReal.Upload(file: File(path),
+    await widget.clientReal.Upload(
+        file: File(path),
         roomId: widget.roomId,
         token: widget.client.getToken(),
         id: widget.client.getId());
@@ -190,7 +184,6 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     print('state = $state');
   }
-
 
   @override
   void dispose() {
