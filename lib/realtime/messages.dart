@@ -40,34 +40,45 @@ abstract class _ClientMessagesMixin implements _DdpClientWrapper {
 
   Future<void> Upload(
       {File file, String roomId, String id, String token}) async {
+    // open a byteStream
+//    var stream = new http.ByteStream(DelegatingStream.typed(file.openRead()));
+//    // get file length
+//    var length = await file.length();
+//    String fileName = file.path.split('/').last;
+//    var multipartFile = new http.MultipartFile('file', stream, length, filename: fileName);
     var request = http.MultipartRequest(
         "POST",
         Uri.parse(
             "https://rocketdev.itgsolutions.com/api/v1/rooms.upload/$roomId"));
-
     Map<String, String> header = {
       'Content-type': 'multipart/form-data',
+      'X-Auth-Token' : token,
+       'X-User-Id' : id
     };
 
-    header['X-Auth-Token'] = token;
-    header['X-User-Id'] = id;
+    request.fields["description"] = 'FROM OUR APP HELLOOOO';
+
+    request.fields["msg"] = "from my device";
+
+    final test = await http.MultipartFile.fromPath('file', file.path, contentType: MediaType('image', '*/*'));
+
+    request.files.add(test);
 
     request.headers.addAll(header);
-    request.fields["file"] = file.path;
-    request.fields["msg"] = "hello";
-    var pic = await http.MultipartFile.fromBytes(
-        "file", await File.fromUri(file.uri).readAsBytes(),
-        contentType: MediaType('image', 'png'));
 
-    request.files.add(pic);
-    var response = await request.send();
-//    print('ress .. ${response.stream.listen((value) {
-//      print('valuess ==>> $value');
-//    })}');
-//
-//    response.stream.transform(utf8.decoder).listen((value) {
-//      print("upload response====>>$value");
-//    });
+    try {
+      final streamedResponse = await request.send();
+      streamedResponse.stream.transform(utf8.decoder).listen((value) {
+        print(value);
+        return Future.value(value);
+      });
+    } catch (e) {
+      print(e);
+    }
+
+
+
+
   }
 
   Future<void> editMessage(Message message) {

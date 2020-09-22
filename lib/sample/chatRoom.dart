@@ -30,7 +30,7 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
   StreamController<List<Message>>();
   Future<ChannelSubscription> messages;
 
-  ClientReal clientReal;
+  ClientReal clientReal;t
 
   @override
   void initState() {
@@ -198,4 +198,5 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
     streamControllerForMessages.close();
     super.dispose();
   }
+
 }
