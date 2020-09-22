@@ -4,13 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jitsi/resourses/AppColors.dart';
 import 'package:jitsi/resourses/Images.dart';
-import 'package:jitsi/ui/chat_room/TakeAPicutre.dart';
+import 'file:///D:/flutter%20chat/Dart_Rocket_Chat/lib/ui/camera_screen/TakeAPicutre.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:camera/camera.dart';
 import 'CustomIconButton.dart';
+import 'CustomMessage.dart';
 
 class CustomMessageInput extends StatefulWidget {
-  Function sendMessage, uploadFile, startRecord, stopRecording;
+  Function sendMessage, uploadFile, startRecord, stopRecording, uploadAudio;
   double iconSize;
   Color iconColor;
   String roomId;
@@ -26,7 +27,8 @@ class CustomMessageInput extends StatefulWidget {
       this.startRecord,
       this.stopRecording,
       this.isRecording,
-      this.token});
+      this.token,
+      this.uploadAudio});
 
   @override
   State<StatefulWidget> createState() {
@@ -51,7 +53,7 @@ class CustomMessageInputState extends State<CustomMessageInput> {
               iconSize: 35,
               iconAsset: CAMERA_MESSAGE,
               iconColor: BLUE_WHITE,
-              permission: Permission.camera,
+              permission: [Permission.camera],
               onPressed: () async {
                 var firstCamera = await getCamera();
                 String imagePath = await Navigator.push(context,
@@ -61,7 +63,7 @@ class CustomMessageInputState extends State<CustomMessageInput> {
                   );
                 }));
                 print("image path=====>> $imagePath");
-                widget.uploadFile(imagePath);
+                widget.uploadFile(imagePath, AttachmentType.image);
               },
             ),
           ),
@@ -97,7 +99,7 @@ class CustomMessageInputState extends State<CustomMessageInput> {
               iconSize: 35,
               iconAsset: MIC_MESSAGE,
               iconColor: BLUE_WHITE,
-              permission: Permission.microphone,
+              permission: [Permission.storage, Permission.microphone],
               onPressed: () {
                 widget.startRecord();
               },
@@ -106,17 +108,25 @@ class CustomMessageInputState extends State<CustomMessageInput> {
           Visibility(
             visible: widget.isRecording,
             child: CustomIconButton(
-              iconSize: 35, icon: Icon(Icons.pause),
-//              iconAsset: MIC_MESSAGE,
-              iconColor: BLUE_WHITE,
+              iconSize: 35,
+              icon: Icon(
+                Icons.pause,
+                color: BLUE_WHITE,
+              ),
               onPressed: () {
-                widget.stopRecording();
+                getFileAndUpload();
               },
             ),
           ),
         ],
       ),
     );
+  }
+
+  getFileAndUpload() async {
+    String file = await widget.stopRecording();
+    widget.uploadFile(file, AttachmentType.audio);
+//    widget.uploadAudio(file);
   }
 
   Widget _getTextField() {
@@ -160,15 +170,18 @@ class CustomMessageInputState extends State<CustomMessageInput> {
                 ListTile(
                     leading: Icon(Icons.image),
                     title: Text('Image'),
-                    onTap: () => showFilePicker(FileType.image)),
+                    onTap: () =>
+                        showFilePicker(FileType.image, AttachmentType.image)),
                 ListTile(
                     leading: Icon(Icons.videocam),
                     title: Text('Video'),
-                    onTap: () => showFilePicker(FileType.video)),
+                    onTap: () =>
+                        showFilePicker(FileType.video, AttachmentType.video)),
                 ListTile(
                   leading: Icon(Icons.insert_drive_file),
                   title: Text('File'),
-                  onTap: () => showFilePicker(FileType.any),
+                  onTap: () =>
+                      showFilePicker(FileType.any, AttachmentType.file),
                 ),
               ],
             ),
@@ -176,10 +189,10 @@ class CustomMessageInputState extends State<CustomMessageInput> {
         });
   }
 
-  showFilePicker(FileType fileType) async {
+  showFilePicker(FileType fileType, AttachmentType type) async {
     File file = await FilePicker.getFile(type: fileType);
     print("file path=====>>>> ${file.path}");
     Navigator.pop(context);
-    widget.uploadFile(file.path);
+    widget.uploadFile(file.path, type);
   }
 }

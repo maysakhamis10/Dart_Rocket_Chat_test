@@ -8,7 +8,7 @@ class CustomIconButton extends StatefulWidget {
   final double iconSize;
   final double scale;
   final Function onPressed;
-  final Permission permission;
+  final List<Permission> permission;
 
   @override
   State<StatefulWidget> createState() {
@@ -44,16 +44,17 @@ class CustomIconButtonState extends State<CustomIconButton> {
       onPressed: () async {
 //        _listenForPermissionStatus();
         if (widget.permission != null)
-          await requestPermission(widget.permission);
+          for(Permission p in widget.permission)
+          await requestPermission(p);
         widget.onPressed();
       },
     );
   }
 
-  void _listenForPermissionStatus() async {
-    final status = await widget.permission.status;
-    setState(() => _permissionStatus = status);
-  }
+//  void _listenForPermissionStatus() async {
+//    final status = await widget.permission.status;
+//    setState(() => _permissionStatus = status);
+//  }
 
   Future<void> requestPermission(Permission permission) async {
     final status = await permission.request();

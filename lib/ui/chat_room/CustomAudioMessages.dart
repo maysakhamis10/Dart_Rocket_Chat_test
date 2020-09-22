@@ -46,7 +46,7 @@ class MessagesCustomAudioState extends State<MessagesCustomAudio> {
         Container(
             constraints: BoxConstraints(
               minWidth: DIMEN_200,
-              maxWidth: DIMEN_280,
+              maxWidth: DIMEN_230,
             ),
             margin: EdgeInsets.all(DIMEN_10),
             decoration: BoxDecoration(

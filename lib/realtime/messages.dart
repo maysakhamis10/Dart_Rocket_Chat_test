@@ -39,22 +39,38 @@ abstract class _ClientMessagesMixin implements _DdpClientWrapper {
   }
 
   Future<void> Upload(
-      {File file, String roomId, String id, String token}) async {
+      {File file,
+      String roomId,
+      String id,
+      String token,
+      AttachmentType type}) async {
+    print("fileeeee ${file.path}");
+    var contentType;
+
+    if (type == AttachmentType.image)
+      contentType = MediaType('image', '*/*');
+    else if (type == AttachmentType.audio)
+      contentType = MediaType('audio', '*/*');
+    else if (type == AttachmentType.video)
+      contentType = MediaType('video', '*/*');
+    else
+      contentType = MediaType('file', '*/*');
     var request = http.MultipartRequest(
         "POST",
         Uri.parse(
             "https://rocketdev.itgsolutions.com/api/v1/rooms.upload/$roomId"));
     Map<String, String> header = {
       'Content-type': 'multipart/form-data',
-      'X-Auth-Token' : token,
-      'X-User-Id' : id
+      'X-Auth-Token': token,
+      'X-User-Id': id
     };
 
     request.fields["description"] = 'FROM OUR APP HELLOOOO';
 
     request.fields["msg"] = "from my device";
 
-    final test = await http.MultipartFile.fromPath('file', file.path, contentType: MediaType('image', '*/*'));
+    final test = await http.MultipartFile.fromPath('file', file.path,
+        contentType: contentType);
 
     request.files.add(test);
 
@@ -69,8 +85,40 @@ abstract class _ClientMessagesMixin implements _DdpClientWrapper {
     } catch (e) {
       print(e);
     }
-
   }
+
+//  Future<void> UploadAudio(
+//      {File file, String roomId, String id, String token}) async {
+//    var request = http.MultipartRequest(
+//        "POST",
+//        Uri.parse(
+//            "https://rocketdev.itgsolutions.com/api/v1/rooms.upload/$roomId"));
+//    Map<String, String> header = {
+//      'Content-type': 'multipart/form-data',
+//      'X-Auth-Token': token,
+//      'X-User-Id': id
+//    };
+//
+//    request.fields["description"] = 'FROM OUR APP HELLOOOO';
+//
+//    request.fields["msg"] = "from my device";
+//
+//    final audio = await http.MultipartFile.fromPath('file', file.path,
+//        contentType: MediaType('audio', '*/*'));
+//    request.files.add(audio);
+//
+//    request.headers.addAll(header);
+//
+//    try {
+//      final streamedResponse = await request.send();
+//      streamedResponse.stream.transform(utf8.decoder).listen((value) {
+//        print(value);
+//        return Future.value(value);
+//      });
+//    } catch (e) {
+//      print(e);
+//    }
+//  }
 
   Future<void> editMessage(Message message) {
     Completer<void> completer = Completer();

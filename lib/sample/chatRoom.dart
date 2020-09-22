@@ -9,8 +9,8 @@ import 'package:jitsi/ui/chat_room/MessageItem.dart';
 import 'MessagesModel.dart';
 import 'dart:math';
 import 'package:audio_recorder/audio_recorder.dart';
-import 'package:file/file.dart';
 import 'package:file/local.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 class ChatRoom extends StatefulWidget {
@@ -43,7 +43,7 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
     _scrollController = new ScrollController();
     WidgetsBinding.instance.addObserver(this);
     clientReal = widget.clientReal;
-
+    localFileSystem = localFileSystem ?? LocalFileSystem();
     clientReal.roomMessages().listen((data) {
       if (data.doc != null && data.doc.values != null) {
         var valuesList = data.doc.values.toList();
@@ -134,6 +134,12 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
                                             return MessageItem(
                                               message: item.msg,
                                               time: item.timestamp,
+//                                              userImageUrl: getUserImage(),
+                                              messageAttachments:
+                                                  getAttachmentType(
+                                                      item.attachments),
+                                              attachmentUrl:
+                                                  "https://rocketdev.itgsolutions.com${getAttachmentUrl(item.attachments)}?rc_uid=${widget.client.getId()}&rc_token=${widget.client.getToken()}",
                                               messageType:
                                                   widget.client.getId() ==
                                                           item.user.id
@@ -155,9 +161,18 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
                   height: 50,
                   child: Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: CustomMessageInput(
-                        sendMessage: sendMessage,
-                        uploadFile: uploadFile,
+                      child: StreamBuilder<bool>(
+                        stream: streamControllerForRecording.stream,
+                        initialData: false,
+                        builder: (context, snap) {
+                          return CustomMessageInput(
+                            sendMessage: sendMessage,
+                            uploadFile: uploadFile,
+                            startRecord: start,
+                            isRecording: snap.data,
+                            stopRecording: stop,
+                          );
+                        },
                       )),
                 ),
               ])
@@ -169,13 +184,22 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
         await widget.clientReal.sendMessage(widget.roomId, text);
   }
 
-  void uploadFile(String path) async {
+  void uploadFile(String path, AttachmentType type) async {
     await widget.clientReal.Upload(
         file: File(path),
         roomId: widget.roomId,
         token: widget.client.getToken(),
+        type: type,
         id: widget.client.getId());
   }
+
+//  void uploadAudio(File file) async {
+//    await widget.clientReal.UploadAudio(
+//        file: file,
+//        roomId: widget.roomId,
+//        token: widget.client.getToken(),
+//        id: widget.client.getId());
+//  }
 
   void didUpdateWidget(ChatRoom oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -190,34 +214,10 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
     print('state = $state');
   }
 
-                                            );
-                                          });
-                                    },
-                                  );
-                                }
-                              } else
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                            }))),
-                Divider(height: 0, color: Colors.black26),
-                Container(
-                  color: Colors.white,
-                  height: 50,
-                  child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: CustomMessageInput(
-                        sendMessage: sendMessage,
-                        uploadFile: uploadFile,
-                      )),
-                ),
-              ])
-        ])));
   Recording _recording = new Recording();
 
-//  bool _isRecording = false;
   Random random = new Random();
-  final LocalFileSystem localFileSystem = LocalFileSystem();
+  LocalFileSystem localFileSystem;
 
   start() async {
     try {
@@ -225,41 +225,26 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
         await AudioRecorder.start();
         bool isRecording = await AudioRecorder.isRecording;
         streamControllerForRecording.sink.add(isRecording);
-        setState(() {
-          _recording = new Recording(duration: new Duration(), path: "");
-//          _isRecording = isRecording;
-        });
+        _recording = new Recording(duration: new Duration(), path: "");
       } else {
         print("doesn't have permission");
-//        Scaffold.of(context).showSnackBar(
-//            new SnackBar(content: new Text("You must accept permissions")));
       }
     } catch (e) {
       print(e);
     }
   }
 
-  stop() async {
+  Future<String> stop() async {
     var recording = await AudioRecorder.stop();
     print("Stop recording: ${recording.path}");
     bool isRecording = await AudioRecorder.isRecording;
     File file = localFileSystem.file(recording.path);
     print("  File length: ${await file.length()}");
-
     streamControllerForRecording.sink.add(isRecording);
-    setState(() {
-      _recording = recording;
-    });
-//    _controller.text = recording.path;
+    _recording = recording;
+    return file.path;
   }
 
-//  void uploadFile(String path) async {
-//    await widget.clientReal.Upload(
-//        file: File(path),
-//        roomId: widget.roomId,
-//        token: widget.client.getToken(),
-//        id: widget.client.getId());
-//  }
   @override
   void dispose() {
     streamController.close();
@@ -308,8 +293,8 @@ class _ChatRoomState extends State<ChatRoom> with WidgetsBindingObserver {
       return "";
   }
 
-  getUserImage(String uid) async {
-    String image_url = await widget.clientReal.getAvatar(uid);
-    return image_url;
-  }
+//  getUserImage(String uid) async {
+//    String image_url = await widget.clientReal.getAvatar(uid);
+//    return image_url;
+//  }
 }
