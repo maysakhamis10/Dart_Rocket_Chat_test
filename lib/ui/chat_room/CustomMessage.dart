@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jitsi/resourses/AppColors.dart';
 import 'package:jitsi/resourses/Dimens.dart';
 import 'package:jitsi/resourses/Styles.dart';
-import 'package:jitsi/ui/video/ChewieVideoPlayer.dart';
+import 'package:jitsi/ui/video_player/ChewieVideoPlayer.dart';
 
 enum MessageType { sent, received }
 enum AttachmentType { file, image, video, audio, text }
@@ -61,7 +61,7 @@ class CustomMessage extends StatelessWidget {
                       width: DIMEN_200,
                       height: DIMEN_200,
                       child: ChewieVideoPlayer(
-                        fileUrl: attachmentUrl,
+                        videoUrl: attachmentUrl,
                       ),
                     )
                   : attachmentType == AttachmentType.file &&

@@ -84,14 +84,14 @@ class TakePictureScreenState extends State<TakeAPicture> {
           : Container(
               child: DisplayPictureScreen(
                 imagePath: imagePath,
-                sendImage: sendImage,
+                sendImage: backWithImagePath,
                 closeCamera: closeCamera,
               ),
             ),
     );
   }
 
-  void sendImage() {
+  void backWithImagePath() {
     Navigator.pop(context, imagePath);
   }
 

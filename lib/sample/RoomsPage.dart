@@ -5,7 +5,6 @@ import 'package:jitsi/rest/client.dart';
 import 'package:jitsi/room_realtime_repo.dart';
 import 'package:jitsi/ui/rooms_list/ChatRoomCircleAvatar.dart';
 import 'package:jitsi/ui/rooms_list/ChatRoomItem.dart';
-
 import 'chatRoom.dart';
 
 class ChatRooms extends StatefulWidget {
@@ -13,7 +12,7 @@ class ChatRooms extends StatefulWidget {
   _ChatRoomsState createState() => _ChatRoomsState();
 }
 
-class _ChatRoomsState extends State<ChatRooms> {
+class _ChatRoomsState extends State<ChatRooms> with WidgetsBindingObserver {
   Client client;
   ClientReal clientReal;
   String roomId;
@@ -32,8 +31,12 @@ class _ChatRoomsState extends State<ChatRooms> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    //  initializingclientReal();
     return Scaffold(
         body: FutureBuilder<List<ChannelSubscription>>(
             future: client.getSubscriptions(),
@@ -47,7 +50,7 @@ class _ChatRoomsState extends State<ChatRooms> {
                         return item != null && !item.name.contains("call")
                             ? ChatRoomItem(
                                 leading: ChatRoomCircleAvatar(
-                                  imageUrl: "",
+                                  userImageUrl: "",
                                   status: item.user != null &&
                                           item.user.status == null
                                       ? ChatStatus.offline
@@ -57,7 +60,8 @@ class _ChatRoomsState extends State<ChatRooms> {
                                           ? ChatStatus.online
                                           : ChatStatus.busy,
                                 ),
-                                channel: item,
+                                name: item.name,
+                                roomId: item.roomId,
                                 onTapFunction: navigateToChat,
                               )
                             : Container();
@@ -68,9 +72,6 @@ class _ChatRoomsState extends State<ChatRooms> {
             }));
   }
 
-  initializingclientReal() async {}
-
-//  navigateToChat(String id, Channel item) {
   navigateToChat(String id) async {
     clientReal =
         await RoomRealTimeRepo.startRoomChat(id, 'pa0707', 'Ab@123456');

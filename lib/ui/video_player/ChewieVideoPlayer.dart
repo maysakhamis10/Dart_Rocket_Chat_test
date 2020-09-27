@@ -1,16 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 
 class ChewieVideoPlayer extends StatefulWidget {
-  final String fileUrl;
+  final String videoUrl;
   final bool looping, autoPlay;
   final double aspectRatio;
 
   const ChewieVideoPlayer({
-    this.fileUrl = "",
+    this.videoUrl = "",
     this.looping = false,
     this.autoPlay = false,
     this.aspectRatio = 16 / 9,
@@ -24,13 +22,13 @@ class _ChewieVideoPlayerState extends State<ChewieVideoPlayer> {
   ChewieController _chewieController;
   VideoPlayerController _videoPlayerController;
 
-  String fileUrl;
+  String videoUrl;
   bool looping, autoPlay;
   double aspectRatio;
   Function callbackFunction;
 
   void initData() {
-    fileUrl = widget.fileUrl;
+    videoUrl = widget.videoUrl;
     looping = widget.looping;
     autoPlay = widget.autoPlay;
     aspectRatio = widget.aspectRatio;
@@ -40,11 +38,9 @@ class _ChewieVideoPlayerState extends State<ChewieVideoPlayer> {
   void initState() {
     super.initState();
     initData();
-
-    if (fileUrl != "" && fileUrl.isNotEmpty) {
-      _videoPlayerController = VideoPlayerController.network(fileUrl);
+    if (videoUrl != "" && videoUrl.isNotEmpty) {
+      _videoPlayerController = VideoPlayerController.network(videoUrl);
     }
-
     _chewieController = ChewieController(
         videoPlayerController: _videoPlayerController,
         looping: looping,

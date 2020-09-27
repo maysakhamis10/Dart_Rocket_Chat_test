@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jitsi/models/models.dart';
 import 'package:jitsi/resourses/Dimens.dart';
+import 'package:jitsi/ui/rooms_list/ChatRoomCircleAvatar.dart';
 import 'CustomAudioMessages.dart';
-import '../CustomProfileImage.dart';
 import 'CustomMessage.dart';
 
 class MessageItem extends StatelessWidget {
@@ -39,7 +39,7 @@ class MessageItem extends StatelessWidget {
       child: Row(
         children: <Widget>[
           messageType == MessageType.received
-              ? CustomProfileImage(userImageUrl: "")
+              ? ChatRoomCircleAvatar(userImageUrl: "")
               : Container(),
           messageAttachments == AttachmentType.audio
               ? MessagesCustomAudio(url: attachmentUrl, time: getTime(time))
@@ -52,7 +52,7 @@ class MessageItem extends StatelessWidget {
                 ),
           messageType == MessageType.received
               ? Container()
-              : CustomProfileImage(userImageUrl: ""),
+              : ChatRoomCircleAvatar(userImageUrl: ""),
         ],
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: messageRowAlignment(),

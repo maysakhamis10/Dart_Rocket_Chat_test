@@ -3,18 +3,20 @@ import 'package:intl/intl.dart';
 import 'package:jitsi/models/models.dart';
 import 'package:jitsi/resourses/Styles.dart';
 
-
 class ChatRoomItem extends StatefulWidget {
   final Widget leading;
 
-  final ChannelSubscription channel;
   final Function onTapFunction;
+  String name, lastMessage, roomId;
+  DateTime timestamp;
 
-  ChatRoomItem({
-    this.leading,
-    this.channel,
-    this.onTapFunction,
-  });
+  ChatRoomItem(
+      {this.leading,
+      this.onTapFunction,
+      this.roomId,
+      this.name,
+      this.timestamp,
+      this.lastMessage});
 
   @override
   _ChatRoomItemState createState() => _ChatRoomItemState();
@@ -29,39 +31,31 @@ class _ChatRoomItemState extends State<ChatRoomItem> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        setState(() {
-          widget.onTapFunction(widget.channel.roomId);
-        });
-      },
-      child: Column(
-        children: <Widget>[
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          widget.onTapFunction(widget.roomId);
+        },
+        child: Column(children: <Widget>[
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-            child: Row(
-              children: <Widget>[
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+              child: Row(children: <Widget>[
                 Expanded(
-                  child: ListTile(
-                    contentPadding: EdgeInsets.all(0),
-                    leading: widget.leading,
-                    title: _getChatTitle(widget.channel),
-                  ),
-                ),
-              ],
-            ),
-          ),
+                    child: ListTile(
+                  contentPadding: EdgeInsets.all(0),
+                  leading: widget.leading,
+                  title: _getChatTitle(widget.name, widget.lastMessage ?? "",
+                      widget.timestamp),
+                ))
+              ])),
           Divider(
             color: Colors.grey.withOpacity(0.5),
             height: 1,
             thickness: 1,
           )
-        ],
-      ),
-    );
+        ]));
   }
 
-  Widget _getChatTitle(ChannelSubscription sender) {
+  Widget _getChatTitle(String name, String lastMessage, DateTime timestamp) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,19 +67,15 @@ class _ChatRoomItemState extends State<ChatRoomItem> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(sender.name ?? "",
+              Text(name ?? "",
                   style: BLUE_TITLE_TEXT_STYLE.copyWith(fontSize: 13),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis),
-//              _getLastMessageText(sender.lastMessage != null ? sender.lastMessage.msg : ""),
+              lastMessage != null ? _getLastMessageText(lastMessage) : null,
             ],
           ),
         ),
-        _getTimeText(
-            /*sender.lastMessage != null
-            ? getTime(sender.lastMessage.timestamp)
-            :*/
-            ""),
+        timestamp != null ? _getTimeText(getTime(timestamp)) : Container(),
       ],
     );
   }

@@ -1,7 +1,10 @@
 part of rest;
 
 abstract class _ClientIMMixin implements _ClientWrapper {
-  Future<List<Message>> loadIMHistory(
+  BehaviorSubject<List<Message>> completer = BehaviorSubject<List<Message>>();
+  BehaviorSubject<int> lastPostion = BehaviorSubject<int>();
+
+  Stream<List<Message>> loadIMHistory(
     String roomId, {
     DateTime latest,
     DateTime oldest,
@@ -9,7 +12,7 @@ abstract class _ClientIMMixin implements _ClientWrapper {
     int count,
     bool unreads,
   }) {
-    Completer<List<Message>> completer = Completer();
+    print("call new values");
     StringBuffer query = StringBuffer('roomId=$roomId');
     print("room_id = " + roomId);
     if (latest != null) {
@@ -33,13 +36,18 @@ abstract class _ClientIMMixin implements _ClientWrapper {
     }).then((response) {
       _hackResponseHeader(response);
       final raws = json.decode(response.body)['messages'];
-      final results = <Message>[];
+      List results = <Message>[];
       for (var raw in raws) {
         results.add(Message.fromJson(raw));
       }
-      completer.complete(results);
-    }).catchError((error) => completer.completeError(error));
-    return completer.future;
+      results = results.reversed.toList();
+      if (!completer.isClosed) completer.sink.add(results);
+    }).catchError((error) {
+      print("error ${error.toString()}");
+      if ((error as StateError) != null) {
+      } else if (!completer.isClosed) completer.addError(error);
+    });
+    return completer.stream;
   }
 
   Future<Channel> createIM(String username) {

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:jitsi/resourses/AppColors.dart';
-
-import '../CustomProfileImage.dart';
+import 'package:jitsi/resourses/Dimens.dart';
+import 'package:jitsi/resourses/Images.dart';
 
 class ChatRoomCircleAvatar extends StatelessWidget {
-  final String imageUrl;
-  final ChatStatus status;
+  String userImageUrl;
+  ChatStatus status;
+  double raduis;
 
-  const ChatRoomCircleAvatar({this.imageUrl, this.status});
+  ChatRoomCircleAvatar({this.userImageUrl, this.status, this.raduis});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +17,7 @@ class ChatRoomCircleAvatar extends StatelessWidget {
       children: <Widget>[
         Stack(
           children: <Widget>[
-            CustomProfileImage(
-              userImageUrl: imageUrl,
-            ),
+            getUserImage(),
             _getStatusWidget(),
           ],
         ),
@@ -63,6 +62,21 @@ class ChatRoomCircleAvatar extends StatelessWidget {
       default:
         return UNSELECTED_GREY;
     }
+  }
+
+  Widget getUserImage() {
+    return Container(
+        width: raduis ?? DIMEN_50,
+        height: raduis ?? DIMEN_50,
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 1),
+            image: DecorationImage(
+              image: userImageUrl != null && userImageUrl.isNotEmpty
+                  ? NetworkImage(userImageUrl)
+                  : AssetImage(MEMBERS_IMAGE),
+              fit: BoxFit.fill,
+            )));
   }
 }
 
