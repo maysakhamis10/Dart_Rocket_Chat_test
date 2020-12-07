@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jitsi/resourses/AppColors.dart';
 import 'package:jitsi/resourses/Dimens.dart';
 import 'package:jitsi/resourses/Styles.dart';
+import 'package:jitsi/ui/video_player/ChewieVideoPlayer.dart';
 
 enum MessageType { sent, received }
 enum AttachmentType { file, image, video, audio, text }
@@ -28,10 +29,6 @@ class CustomMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-//      padding: EdgeInsets.symmetric(
-//        vertical: DIMEN_2,
-//        horizontal: DIMEN_8,
-//      ),
       margin: EdgeInsets.symmetric(
         vertical: DIMEN_4,
         horizontal: DIMEN_12,
@@ -54,7 +51,19 @@ class CustomMessage extends StatelessWidget {
           attachmentType == AttachmentType.image && attachmentUrl != null
               ? imageMessage()
               : attachmentType == AttachmentType.video && attachmentUrl != null
-                  ? Container()
+                  ? Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(DIMEN_8),
+                          topRight: Radius.circular(DIMEN_8),
+                        ),
+                      ),
+                      width: DIMEN_200,
+                      height: DIMEN_200,
+                      child: ChewieVideoPlayer(
+                        videoUrl: attachmentUrl,
+                      ),
+                    )
                   : attachmentType == AttachmentType.file &&
                           attachmentUrl != null
                       ? Container()

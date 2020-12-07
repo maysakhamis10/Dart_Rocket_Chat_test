@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:jitsi/models/models.dart';
 import 'package:jitsi/resourses/Dimens.dart';
+import 'package:jitsi/ui/rooms_list/ChatRoomCircleAvatar.dart';
 import 'CustomAudioMessages.dart';
-import '../CustomProfileImage.dart';
 import 'CustomMessage.dart';
 
 class MessageItem extends StatelessWidget {
@@ -14,6 +15,8 @@ class MessageItem extends StatelessWidget {
   double minWidth;
   String userImageUrl;
   AttachmentType messageAttachments;
+  String attachmentUrl;
+  User user;
 
   MessageItem(
       {this.message,
@@ -22,7 +25,9 @@ class MessageItem extends StatelessWidget {
       this.minWidth,
       this.maxWidth,
       this.userImageUrl,
-      this.messageAttachments});
+      this.user,
+      this.messageAttachments,
+      this.attachmentUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -34,24 +39,20 @@ class MessageItem extends StatelessWidget {
       child: Row(
         children: <Widget>[
           messageType == MessageType.received
-              ? CustomProfileImage(userImageUrl: "")
+              ? ChatRoomCircleAvatar(userImageUrl: "")
               : Container(),
           messageAttachments == AttachmentType.audio
-              ? MessagesCustomAudio(
-                  url:
-                      "https://www.mediacollege.com/downloads/sound-effects/nature/forest/rainforest-ambient.mp3",
-                  time: getTime(time))
+              ? MessagesCustomAudio(url: attachmentUrl, time: getTime(time))
               : CustomMessage(
                   message: message,
                   time: getTime(time),
                   messageType: messageType,
-//                  attachmentType: AttachmentType.image,
-//                  attachmentUrl:
-//                      "https://image.shutterstock.com/z/stock-photo-mountains-during-sunset-beautiful-natural-landscape-in-the-summer-time-407021107.jpg",
+                  attachmentType: messageAttachments,
+                  attachmentUrl: attachmentUrl,
                 ),
           messageType == MessageType.received
               ? Container()
-              : CustomProfileImage(userImageUrl: ""),
+              : ChatRoomCircleAvatar(userImageUrl: ""),
         ],
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: messageRowAlignment(),

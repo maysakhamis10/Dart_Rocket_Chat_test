@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class CustomIconButton extends StatefulWidget {
+class CustomChatIconButton extends StatefulWidget {
   final Widget icon;
   final String iconAsset;
   final Color iconColor;
   final double iconSize;
   final double scale;
   final Function onPressed;
-  final Permission permission;
+  final List<Permission> permission;
 
   @override
   State<StatefulWidget> createState() {
-    return CustomIconButtonState();
+    return CustomChatIconButtonState();
   }
 
-  CustomIconButton(
+  CustomChatIconButton(
       {this.icon,
       this.iconAsset,
       this.iconColor,
@@ -25,9 +25,7 @@ class CustomIconButton extends StatefulWidget {
       this.onPressed});
 }
 
-class CustomIconButtonState extends State<CustomIconButton> {
-  PermissionStatus _permissionStatus = PermissionStatus.undetermined;
-
+class CustomChatIconButtonState extends State<CustomChatIconButton> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
@@ -42,47 +40,14 @@ class CustomIconButtonState extends State<CustomIconButton> {
       ),
       padding: const EdgeInsets.all(0),
       onPressed: () async {
-//        _listenForPermissionStatus();
         if (widget.permission != null)
-          await requestPermission(widget.permission);
-        widget.onPressed();
+          for (Permission p in widget.permission) await requestPermission(p);
+        if (widget.onPressed != null) widget.onPressed();
       },
     );
   }
 
-  void _listenForPermissionStatus() async {
-    final status = await widget.permission.status;
-    setState(() => _permissionStatus = status);
-  }
-
-  Color getPermissionColor() {
-    switch (_permissionStatus) {
-      case PermissionStatus.denied:
-        return Colors.red;
-      case PermissionStatus.granted:
-        return Colors.green;
-      default:
-        return Colors.grey;
-    }
-  }
-
-  void checkServiceStatus(BuildContext context, Permission permission) async {
-    Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text((await permission.status).toString()),
-    ));
-  }
-
   Future<void> requestPermission(Permission permission) async {
-    final status = await permission.request();
-    setState(() {
-      print(status);
-      _permissionStatus = status;
-      print(_permissionStatus);
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
+    await permission.request();
   }
 }

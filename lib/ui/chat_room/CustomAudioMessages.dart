@@ -16,7 +16,7 @@ class MessagesCustomAudio extends StatefulWidget {
 
 class MessagesCustomAudioState extends State<MessagesCustomAudio> {
   AudioPlayer audioPlayer;
-  bool muted;
+
   bool _isPlaying;
   Duration duration, position;
 
@@ -25,7 +25,7 @@ class MessagesCustomAudioState extends State<MessagesCustomAudio> {
     super.initState();
     duration = position = new Duration(seconds: 0);
     audioPlayer = AudioPlayer();
-    _isPlaying = muted = false;
+    _isPlaying = false;
   }
 
   @override
@@ -46,7 +46,7 @@ class MessagesCustomAudioState extends State<MessagesCustomAudio> {
         Container(
             constraints: BoxConstraints(
               minWidth: DIMEN_200,
-              maxWidth: DIMEN_280,
+              maxWidth: DIMEN_230,
             ),
             margin: EdgeInsets.all(DIMEN_10),
             decoration: BoxDecoration(
@@ -106,28 +106,13 @@ class MessagesCustomAudioState extends State<MessagesCustomAudio> {
                             padding: EdgeInsets.all(0.0),
                             iconSize: 0.0,
                             enableFeedback: false,
-                            icon: !muted
-                                ? Image.asset(
-                                    HEADPHONE_AUDIO_MESSAGE,
-                                    color: WHITE,
-                                    height: 20,
-                                    fit: BoxFit.fitHeight,
-                                  )
-                                : Icon(
-                                    Icons.volume_up,
-                                    size: 20,
-                                    color: WHITE,
-                                  ),
+                            icon: Image.asset(
+                              HEADPHONE_AUDIO_MESSAGE,
+                              color: WHITE,
+                              height: 20,
+                              fit: BoxFit.fitHeight,
+                            ),
                             onPressed: () {
-                              muted
-                                  ? audioPlayer.setVolume(1.0).then((i) {
-                                      muted = i != 1;
-                                      setState(() {});
-                                    })
-                                  : audioPlayer.setVolume(0.0).then((i) {
-                                      muted = i == 1;
-                                      setState(() {});
-                                    });
                             }),
                         Text(
                           "${duration.inMinutes.remainder(60)}:${(duration.inSeconds.remainder(60))}",

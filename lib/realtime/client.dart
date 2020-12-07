@@ -10,6 +10,7 @@ import 'package:ddp/ddp.dart' as ddp;
 import 'package:jitsi/models/models.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:jitsi/ui/chat_room/CustomMessage.dart';
 
 part 'channels.dart';
 part 'emoji.dart';

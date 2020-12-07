@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:jitsi/models/models.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'channels.dart';
 

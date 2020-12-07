@@ -85,6 +85,7 @@ const double DIMEN_150 = 150.0;
 const double DIMEN_190 = 190.0;
 const double DIMEN_200 = 200.0;
 const double DIMEN_220 = 220.0;
+const double DIMEN_230 = 230.0;
 const double DIMEN_1000 = 1000.0;
 
 const double DIMEN_2_24 = 2.24;
